@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,13 +20,14 @@ import android.widget.TextView;
 import com.example.wardrobe.model.Model;
 import com.example.wardrobe.model.entities.Garment;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class ClosetListFragment extends Fragment {
     RecyclerView list;
-    List<Garment> data;
-
+    List<Garment> data = new LinkedList<Garment>();
+    GarmentListAdapter adapter;
     interface Delegate{
         void onItemSelected(Garment student);
     }
@@ -33,7 +35,15 @@ public class ClosetListFragment extends Fragment {
     Delegate parent;
 
     public ClosetListFragment() {
-        data = Model.instance.getAllGarments();
+        Model.instance.getAllGarments(new Model.GetAllGarmentsListener() {
+            @Override
+            public void onComplete(List<Garment> _data) {
+                data = _data;
+                if(adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -51,14 +61,14 @@ public class ClosetListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_closet_list, container, false);
+        final View view =  inflater.inflate(R.layout.fragment_closet_list, container, false);
         list = view.findViewById(R.id.closet_list_list);
         list.setHasFixedSize(true);
 
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
 
-        GarmentListAdapter adapter = new GarmentListAdapter();
+        adapter = new GarmentListAdapter();
         list.setAdapter(adapter);
 
         adapter.setOnIntemClickListener(new OnItemClickListener() {
@@ -66,7 +76,9 @@ public class ClosetListFragment extends Fragment {
             public void onClick(int position) {
                 Log.d("TAG","row was clicked" + position);
                 Garment garment = data.get(position);
-                parent.onItemSelected(garment);
+                //parent.onItemSelected(garment);
+                NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
+                Navigation.findNavController(view).navigate(direction);
             }
         });
 

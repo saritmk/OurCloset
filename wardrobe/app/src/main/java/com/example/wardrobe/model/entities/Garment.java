@@ -1,8 +1,16 @@
 package com.example.wardrobe.model.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 
+@Entity
 public class Garment implements Serializable {
+
+    @PrimaryKey
+    @NonNull
     public String id;
     public String imageUri;
 

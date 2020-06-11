@@ -1,5 +1,9 @@
 package com.example.wardrobe.model;
 
+import android.os.AsyncTask;
+
+import androidx.annotation.NonNull;
+
 import com.example.wardrobe.model.entities.Garment;
 
 import java.util.LinkedList;
@@ -8,22 +12,38 @@ import java.util.List;
 public class Model {
     public static final Model instance = new Model();
 
+    private Model() {
+    }
+    public interface GetAllGarmentsListener {
+        void onComplete(List<Garment> data);
+    }
 
-    List<Garment> data = new LinkedList<>();
+    public void getAllGarments(final GetAllGarmentsListener listenr){
+        class MyAsyncTask extends AsyncTask<String,String,String> {
+            List<Garment> data;
+            @Override
+            protected String doInBackground(String... strings) {
+              for (int i = 0; i < 10; i++) {
+                    AppLocalDb.db.garmentDao().insertAll(new Garment(""+i,null));
+                }
 
-    private Model(){
-        for (int i = 0; i < 10; i++) {
-            data.add(new Garment(""+i,null));
+                data = AppLocalDb.db.garmentDao().getAll();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                listenr.onComplete(data);
+            }
         }
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute();
     }
-
-
-    public List<Garment> getAllGarments(){
-        return data;
-    }
-
 
     public Garment getGarment(String id){
         return null;
     }
+
+
 }
