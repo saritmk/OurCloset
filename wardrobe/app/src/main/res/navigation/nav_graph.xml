@@ -17,6 +17,9 @@
         <argument
             android:name="garment"
             app:argType="com.example.wardrobe.model.entities.Garment" />
+        <action
+            android:id="@+id/action_garmentDetailsFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment" />
     </fragment>
     <action android:id="@+id/actionGlobal_garmentDetailsFragment" app:destination="@id/garmentDetailsFragment" />
     <fragment
@@ -29,4 +32,18 @@
         android:name="com.example.wardrobe.FriendsFragment"
         android:label="fragment_friends"
         tools:layout="@layout/fragment_friends" />
+    <fragment
+        android:id="@+id/transactionListFragment"
+        android:name="com.example.wardrobe.transactionListFragment"
+        android:label="fragment_transaction_list"
+        tools:layout="@layout/fragment_transaction_list" />
+    <fragment
+        android:id="@+id/addTransactionFragment"
+        android:name="com.example.wardrobe.AddTransactionFragment"
+        android:label="fragment_add_transaction"
+        tools:layout="@layout/fragment_add_transaction" >
+        <argument
+            android:name="garment"
+            app:argType="com.example.wardrobe.model.entities.Garment" />
+    </fragment>
 </navigation>

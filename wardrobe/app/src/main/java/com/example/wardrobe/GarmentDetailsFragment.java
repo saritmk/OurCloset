@@ -9,6 +9,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.wardrobe.model.entities.Garment;
@@ -23,7 +24,6 @@ public class GarmentDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,8 +35,20 @@ public class GarmentDetailsFragment extends Fragment {
         if (garment != null){
             update_display();
         }
+        Button b = view.findViewById(R.id.addTransactionForGarment);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GarmentDetailsFragment.this.onAddTransactionButton();
+            }
+        });
 
         return view;
+    }
+
+    private void onAddTransactionButton(){
+        GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToAddTransactionFragment diraction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToAddTransactionFragment(garment);
+        Navigation.findNavController(getView()).navigate(diraction);
     }
 
     private void update_display() {

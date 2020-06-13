@@ -6,6 +6,13 @@
         android:id="@id/newGramentFragment"
         android:title="new" />
     <item
+        android:id="@id/friendsFragment"
+        android:title="friends"/>
+    <item
         android:id="@id/closetListFragment"
         android:title="closet" />
+    <item
+        android:id="@id/transactionListFragment"
+        android:title="transactions" />
+
 </menu>
