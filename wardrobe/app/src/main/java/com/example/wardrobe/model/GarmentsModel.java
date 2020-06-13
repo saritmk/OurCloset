@@ -2,20 +2,39 @@ package com.example.wardrobe.model;
 
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
-
 import com.example.wardrobe.model.entities.Garment;
+import com.example.wardrobe.model.firebase.GarmentsFirebase;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class Model {
-    public static final Model instance = new Model();
+public class GarmentsModel {
+    public interface Listener<T>{
+        void onComplete(T data);
+    }
+    public static final GarmentsModel instance = new GarmentsModel();
 
-    private Model() {
+    private GarmentsModel() {
     }
     public interface GetAllGarmentsListener {
         void onComplete(List<Garment> data);
+    }
+
+    public void refreshGarmentsList(int owner_id){
+        GarmentsFirebase.getGarmentsList(owner_id,new OnSuccessListener<List<Garment>>() {
+            @Override
+            public void onSuccess(final List<Garment> garmentsList) {
+                new AsyncTask<String, String, String>() {
+                    @Override
+                    protected String doInBackground(String... strings) {
+                        for (Garment currGarment : garmentsList) {
+                            AppLocalDb.db.garmentDao().insertAll(currGarment);
+                        }
+                        return "";
+                    }
+                }.execute("");
+            }
+        });
     }
 
     public void getAllGarments(final GetAllGarmentsListener listenr){
