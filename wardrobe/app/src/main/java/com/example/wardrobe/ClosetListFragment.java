@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -17,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.wardrobe.model.Model;
+import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
 
 import java.util.LinkedList;
@@ -35,7 +34,7 @@ public class ClosetListFragment extends Fragment {
     Delegate parent;
 
     public ClosetListFragment() {
-        Model.instance.getAllGarments(new Model.GetAllGarmentsListener() {
+        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
             @Override
             public void onComplete(List<Garment> _data) {
                 data = _data;
