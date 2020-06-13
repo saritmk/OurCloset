@@ -24,4 +24,9 @@
         android:name="com.example.wardrobe.NewGramentFragment"
         android:label="fragment_new_grament"
         tools:layout="@layout/fragment_new_grament" />
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.wardrobe.FriendsFragment"
+        android:label="fragment_friends"
+        tools:layout="@layout/fragment_friends" />
 </navigation>
