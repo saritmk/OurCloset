@@ -2,13 +2,6 @@ package com.example.wardrobe;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.wardrobe.model.GarmentsModel;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.wardrobe.model.entities.Garment;
 
 import java.util.LinkedList;
@@ -34,15 +32,15 @@ public class ClosetListFragment extends Fragment {
     Delegate parent;
 
     public ClosetListFragment() {
-        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
-            @Override
-            public void onComplete(List<Garment> _data) {
-                data = _data;
-                if(adapter != null) {
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
+//        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
+//            @Override
+//            public void onComplete(List<Garment> _data) {
+//                data = _data;
+//                if(adapter != null) {
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -110,7 +108,7 @@ public class ClosetListFragment extends Fragment {
         }
 
         public void bind(Garment gr) {
-            id.setText(gr.id);
+            id.setText(gr.getId());
             garment = gr;
         }
     }

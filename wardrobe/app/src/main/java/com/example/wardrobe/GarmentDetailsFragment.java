@@ -1,19 +1,14 @@
 package com.example.wardrobe;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.wardrobe.model.entities.Garment;
+import androidx.fragment.app.Fragment;
 
-import org.w3c.dom.Text;
+import com.example.wardrobe.model.entities.Garment;
 
 public class GarmentDetailsFragment extends Fragment {
     Garment garment;
@@ -40,6 +35,6 @@ public class GarmentDetailsFragment extends Fragment {
     }
 
     private void update_display() {
-        id.setText(garment.id);
+        id.setText(garment.getId());
     }
 }

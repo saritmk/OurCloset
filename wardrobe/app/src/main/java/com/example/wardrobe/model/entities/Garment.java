@@ -11,19 +11,68 @@ public class Garment implements Serializable {
 
     @PrimaryKey
     @NonNull
-    public String id;
-    public String imageUri;
+    private String id;
+    private String imageUrl;
+    private String color;
+    private String owner_id;
+    private String type;
+    private String size;
 
-    public String getImageUri() {
-        return imageUri;
+    public String getSize() {
+        return this.size;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public Garment(String id, String imageUri) {
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return this.color;
+    }
+
+    public void setId(@NonNull String id) {
         this.id = id;
-        this.imageUri = imageUri;
+    }
+
+    @NonNull
+    public String getId() {
+        return this.id;
+    }
+
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
+    }
+
+    public String getOwner_id() {
+        return this.owner_id;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public Garment(String id, String imageUrl, String owner_id, String type, String color, String size) {
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.color = color;
+        this.owner_id = owner_id;
+        this.type = type;
+        this.size = size;
     }
 }

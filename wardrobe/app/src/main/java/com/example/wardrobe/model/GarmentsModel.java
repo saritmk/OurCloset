@@ -2,9 +2,10 @@ package com.example.wardrobe.model;
 
 import android.os.AsyncTask;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.firebase.GarmentsFirebase;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public class GarmentsModel {
     }
 
     public void refreshGarmentsList(int owner_id){
-        GarmentsFirebase.getGarmentsList(owner_id,new OnSuccessListener<List<Garment>>() {
+        GarmentsFirebase.getGarmentsList(owner_id,new Listener<List<Garment>>() {
             @Override
-            public void onSuccess(final List<Garment> garmentsList) {
+            public void onComplete(final List<Garment> garmentsList) {
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
@@ -37,16 +38,17 @@ public class GarmentsModel {
         });
     }
 
-    public void getAllGarments(final GetAllGarmentsListener listenr){
+    public void getAllGarments(final int owner_id, final GetAllGarmentsListener listenr){
         class MyAsyncTask extends AsyncTask<String,String,String> {
             List<Garment> data;
             @Override
             protected String doInBackground(String... strings) {
               for (int i = 0; i < 10; i++) {
-                    AppLocalDb.db.garmentDao().insertAll(new Garment(""+i,null));
+                    AppLocalDb.db.garmentDao().insertAll(new Garment(""+i,null,null,null,null,null));
                 }
 
                 data = AppLocalDb.db.garmentDao().getAll();
+                refreshGarmentsList(owner_id);
                 return null;
             }
 
@@ -62,6 +64,12 @@ public class GarmentsModel {
 
     public Garment getGarment(String id){
         return null;
+    }
+
+    public LiveData<List<Garment>> getAllGarments(int owner_id){
+        LiveData<List<Garment>> liveData = (LiveData<List<Garment>>) AppLocalDb.db.garmentDao().getAll();
+        refreshGarmentsList(owner_id);
+        return liveData;
     }
 
 
