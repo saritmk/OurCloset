@@ -43,7 +43,7 @@ public class GarmentDetailsFragment extends Fragment {
 
     private void onAddTransactionButton(){
         GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToAddTransactionFragment diraction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToAddTransactionFragment(garment);
-        Navigation.findNavController(getView()).navigate(diraction);
+        //Navigation.findNavController(getView()).navigate(diraction);
     }
 
     private void update_display() {

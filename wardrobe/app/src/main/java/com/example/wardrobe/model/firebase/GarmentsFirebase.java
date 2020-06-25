@@ -18,7 +18,7 @@ import java.util.Map;
 public class GarmentsFirebase {
     final static String GARMENTS_COLLECTION = "Garments";
 
-    public static  void getGarmentsList(int owner_id, final GarmentsModel.Listener<List<Garment>> listener) {
+    public static  void getGarmentsList(String owner_id, final GarmentsModel.Listener<List<Garment>> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(GARMENTS_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

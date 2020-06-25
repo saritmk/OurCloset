@@ -11,10 +11,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
 
 import java.util.LinkedList;
@@ -25,6 +30,9 @@ public class ClosetListFragment extends Fragment {
     RecyclerView list;
     List<Garment> data = new LinkedList<Garment>();
     GarmentListAdapter adapter;
+    GarmentsListViewModel viewModel;
+    LiveData<List<Garment>> liveData;
+
     interface Delegate{
         void onItemSelected(Garment student);
     }
@@ -52,6 +60,8 @@ public class ClosetListFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + "student list parent activity must implement dtudent ;list fragment Delegate");
         }
+
+        viewModel = new ViewModelProvider(this).get(GarmentsListViewModel.class);
     }
 
     @Override
@@ -76,6 +86,28 @@ public class ClosetListFragment extends Fragment {
                 //parent.onItemSelected(garment);
                 NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
                 Navigation.findNavController(view).navigate(direction);
+            }
+        });
+
+        liveData = viewModel.getData();
+        liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
+            @Override
+            public void onChanged(List<Garment> garments) {
+                data = garments;
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.closet_list_swipe_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.refresh(new GarmentsModel.CompListener() {
+                    @Override
+                    public void onComplete() {
+                        swipeRefresh.setRefreshing(false);
+                    }
+                });
             }
         });
 

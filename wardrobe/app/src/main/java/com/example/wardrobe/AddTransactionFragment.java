@@ -1,14 +1,12 @@
 package com.example.wardrobe;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.wardrobe.model.entities.Garment;
 
@@ -34,7 +32,7 @@ public class AddTransactionFragment extends Fragment {
         return view;
     }
     private void update_display() {
-        id.setText(garment.id);
+        //id.setText(garment.id);
     }
 
 }

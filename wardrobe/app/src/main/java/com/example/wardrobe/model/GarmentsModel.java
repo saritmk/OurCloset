@@ -13,15 +13,15 @@ public class GarmentsModel {
     public interface Listener<T>{
         void onComplete(T data);
     }
+    public interface CompListener{
+        void onComplete();
+    }
     public static final GarmentsModel instance = new GarmentsModel();
 
     private GarmentsModel() {
     }
-    public interface GetAllGarmentsListener {
-        void onComplete(List<Garment> data);
-    }
 
-    public void refreshGarmentsList(int owner_id){
+    public void refreshGarmentsList(String owner_id, final CompListener listener){
         GarmentsFirebase.getGarmentsList(owner_id,new Listener<List<Garment>>() {
             @Override
             public void onComplete(final List<Garment> garmentsList) {
@@ -33,42 +33,31 @@ public class GarmentsModel {
                         }
                         return "";
                     }
+                    @Override
+                    protected void onPostExecute(String s) {
+                        super.onPostExecute(s);
+                        if (listener!=null)  listener.onComplete();
+                    }
                 }.execute("");
             }
         });
-    }
-
-    public void getAllGarments(final int owner_id, final GetAllGarmentsListener listenr){
-        class MyAsyncTask extends AsyncTask<String,String,String> {
-            List<Garment> data;
-            @Override
-            protected String doInBackground(String... strings) {
-              for (int i = 0; i < 10; i++) {
-                    AppLocalDb.db.garmentDao().insertAll(new Garment(""+i,null,null,null,null,null));
-                }
-
-                data = AppLocalDb.db.garmentDao().getAll();
-                refreshGarmentsList(owner_id);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                listenr.onComplete(data);
-            }
-        }
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
     }
 
     public Garment getGarment(String id){
         return null;
     }
 
-    public LiveData<List<Garment>> getAllGarments(int owner_id){
+    public void update(Garment garment){
+
+    }
+
+    public void delete(Garment garment){
+
+    }
+
+    public LiveData<List<Garment>> getAllGarments(String owner_id){
         LiveData<List<Garment>> liveData = (LiveData<List<Garment>>) AppLocalDb.db.garmentDao().getAll();
-        refreshGarmentsList(owner_id);
+        refreshGarmentsList(owner_id,null);
         return liveData;
     }
 
