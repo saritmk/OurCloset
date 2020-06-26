@@ -1,12 +1,12 @@
 package com.example.wardrobe;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
-
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
