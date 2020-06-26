@@ -20,18 +20,18 @@ public class GarmentsFirebase {
 
     public static  void getGarmentsList(String owner_id, final GarmentsModel.Listener<List<Garment>> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(GARMENTS_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(GARMENTS_COLLECTION).whereEqualTo("owner_id", owner_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                List<Garment> stData = null;
+                List<Garment> garmentsData = null;
                 if (task.isSuccessful()){
-                    stData = new LinkedList<Garment>();
+                    garmentsData = new LinkedList<Garment>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         Garment garment = doc.toObject(Garment.class);
-                        stData.add(garment);
+                        garmentsData.add(garment);
                     }
                 }
-                listener.onComplete(stData);
+                listener.onComplete(garmentsData);
             }
         });
     }

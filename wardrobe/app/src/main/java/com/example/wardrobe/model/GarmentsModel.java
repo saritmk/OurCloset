@@ -56,7 +56,7 @@ public class GarmentsModel {
     }
 
     public LiveData<List<Garment>> getAllGarments(String owner_id){
-        LiveData<List<Garment>> liveData = AppLocalDb.db.garmentDao().getAll();
+        LiveData<List<Garment>> liveData = AppLocalDb.db.garmentDao().getAll(owner_id);
         refreshGarmentsList(owner_id,null);
         return liveData;
     }

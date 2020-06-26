@@ -13,8 +13,8 @@ import java.util.List;
 
 @Dao
 public interface GarmentDao {
-    @Query("SELECT * FROM Garment")
-    LiveData<List<Garment>> getAll();
+    @Query("SELECT * FROM Garment WHERE owner_id = :owner_id")
+    LiveData<List<Garment>> getAll(String owner_id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Garment... garments);
