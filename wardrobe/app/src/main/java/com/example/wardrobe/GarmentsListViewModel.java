@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GarmentsListViewModel extends ViewModel {
     LiveData<List<Garment>> liveData;
-    String owner_id= "";
+    String owner_id= "1";
 
     public LiveData<List<Garment>> getData() {
         if (liveData == null) {
