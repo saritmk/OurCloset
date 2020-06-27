@@ -17,7 +17,7 @@ public class GarmentDetailsFragment extends Fragment {
     Garment garment;
     TextView id;
     // TODO: Delete!! this is a temporery test
-    AddTransactionViewModel viewModel;
+    TransactionViewModel viewModel;
 
     public GarmentDetailsFragment() {
         // Required empty public constructor
@@ -26,7 +26,7 @@ public class GarmentDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(AddTransactionViewModel.class);
+        viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
 
         // Only Test
         viewModel.addNewTransaction("1","2","I want this");

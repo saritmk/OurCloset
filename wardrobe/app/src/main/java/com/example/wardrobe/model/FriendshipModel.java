@@ -43,8 +43,21 @@ public class FriendshipModel {
         });
     }
 
-    public void delete(Friendship friendship){
+    public void deleteFriendship(final Friendship friendship, final Listener<Boolean> listener){
+        FriendshipsFirebase.deleteFriendship(friendship.getFriendship_id(), new Listener<Boolean>() {
+            @Override
+            public void onComplete(Boolean data) {
+                if(data)
+                {
+                    AppLocalDb.db.friendshipDao().delete(friendship);
+                    listener.onComplete(true);
+                }
+            }
+        });
+    }
 
+    public void addNewFriendship(Friendship friendship, Listener<Boolean> listener){
+        FriendshipsFirebase.addFriendship(friendship,listener);
     }
 
     public LiveData<List<Friendship>> getAllFriendships(String user_id){

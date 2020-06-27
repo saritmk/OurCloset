@@ -88,6 +88,10 @@ public class TransactionRequestsModel {
         });
     }
 
+    public void updateTransactionStatus(String transaction_id, String newStatus, final Listener<Boolean> listener){
+        TransactionRequestsFirebase.updateTransactionStatus(transaction_id, newStatus, listener);
+    }
+
     public LiveData<List<TransactionRequest>> getAllBorrowedFromTransactions(String user_id){
         LiveData<List<TransactionRequest>> liveData = AppLocalDb.db.transactionDao().getAllBorrowedFrom(user_id);
         refreshBorrowedFromTransactionsList(user_id,null);

@@ -74,6 +74,20 @@ public class TransactionRequestsFirebase {
         });
     }
 
+    public static void updateTransactionStatus(String transactionId, String newStatus, final TransactionRequestsModel.Listener<Boolean> listener){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(TRANSACTION_REQUESTS_COLLECTION).document(transactionId)
+                .update("status", newStatus)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (listener!=null){
+                    listener.onComplete(task.isSuccessful());
+                }
+            }
+        });
+    }
+
     public static void deleteTransaction(String transactionId, final TransactionRequestsModel.Listener<Boolean> listener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(TRANSACTION_REQUESTS_COLLECTION).document(transactionId)

@@ -37,7 +37,7 @@ public class GarmentsFirebase {
         });
     }
 
-    public void addGarment(Garment garmentToAdd, final GarmentsModel.Listener<Boolean> listener){
+    public static void addGarment(Garment garmentToAdd, final GarmentsModel.Listener<Boolean> listener){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(GARMENTS_COLLECTION).add(toJson(garmentToAdd)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -55,10 +55,24 @@ public class GarmentsFirebase {
         });
     }
 
-    public void deleteGarment(String garmentId, final GarmentsModel.Listener<Boolean> listener) {
+    public static void deleteGarment(String garmentId, final GarmentsModel.Listener<Boolean> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(GARMENTS_COLLECTION).document(garmentId)
                 .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (listener!=null){
+                            listener.onComplete(task.isSuccessful());
+                        }
+                    }
+                });
+    }
+
+    public static void updateGarment(Garment garment, final GarmentsModel.Listener<Boolean> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(GARMENTS_COLLECTION).document(garment.getId())
+                .set(garment)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

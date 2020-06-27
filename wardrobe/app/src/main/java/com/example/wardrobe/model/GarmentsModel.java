@@ -43,23 +43,38 @@ public class GarmentsModel {
         });
     }
 
-    public Garment getGarment(String id){
-        return null;
-    }
-
-    public void update(Garment garment){
-
-    }
-
-    public void delete(Garment garment){
-
-    }
-
     public LiveData<List<Garment>> getAllGarments(String owner_id){
         LiveData<List<Garment>> liveData = AppLocalDb.db.garmentDao().getAll(owner_id);
         refreshGarmentsList(owner_id,null);
         return liveData;
     }
+
+    public Garment getGarment(String id){
+        return null;
+    }
+
+    public void addNewGarment(Garment garment, Listener<Boolean> listener){
+        GarmentsFirebase.addGarment(garment, listener);
+    }
+
+    public void update(Garment garment, Listener<Boolean> listener){
+        GarmentsFirebase.updateGarment(garment,listener);
+    }
+
+    public void delete(final Garment garment, final Listener<Boolean> listener){
+        GarmentsFirebase.deleteGarment(garment.getId(), new Listener<Boolean>() {
+            @Override
+            public void onComplete(Boolean data) {
+                if(data) {
+                    AppLocalDb.db.garmentDao().delete(garment);
+                    listener.onComplete(true);
+                }
+            }
+        });
+    }
+
+
+
 
 
 }

@@ -16,7 +16,7 @@ import com.example.wardrobe.model.entities.Garment;
 public class AddTransactionFragment extends Fragment {
     Garment garment;
     TextView id;
-    AddTransactionViewModel viewModel;
+    TransactionViewModel viewModel;
 
     public AddTransactionFragment() {
         // Required empty public constructor
@@ -25,7 +25,7 @@ public class AddTransactionFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(AddTransactionViewModel.class);
+        viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
 
         // Only Test
         viewModel.addNewTransaction("1","2","I want this");

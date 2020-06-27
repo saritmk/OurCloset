@@ -49,7 +49,7 @@ public class FriendshipsFirebase {
         });
     }
 
-    public void addFriendship(Friendship friendshipToAdd, final FriendshipModel.Listener<Boolean> listener){
+    public static void addFriendship(Friendship friendshipToAdd, final FriendshipModel.Listener<Boolean> listener){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FRIENDSHIPS_COLLECTION).add(toJson(friendshipToAdd)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -67,7 +67,7 @@ public class FriendshipsFirebase {
         });
     }
 
-    public void deleteFriendship(String friendshipId, final FriendshipModel.Listener<Boolean> listener) {
+    public static void deleteFriendship(String friendshipId, final FriendshipModel.Listener<Boolean> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FRIENDSHIPS_COLLECTION).document(friendshipId)
                 .delete()

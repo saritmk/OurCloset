@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.wardrobe.model.TransactionRequestsModel;
 import com.example.wardrobe.model.entities.TransactionRequest;
 
-public class AddTransactionViewModel extends ViewModel {
+public class TransactionViewModel extends ViewModel {
     String curr_user_id = "1";
 
     public void addNewTransaction(String garment_id, String owner_id, String requestText){
@@ -22,5 +22,9 @@ public class AddTransactionViewModel extends ViewModel {
                 // DO Somthing
             }
         });
+    }
+
+    public void updateTransactionStatus(String transactionId, String newStatus){
+
     }
 }
