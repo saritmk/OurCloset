@@ -35,7 +35,7 @@ public class UsersFirebase {
     }
     private static Map<String, Object> toJson(User user){
         HashMap<String, Object> result = new HashMap<>();
-        result.put("user_id", user.getUid());
+        result.put("user_id", user.getId());
         result.put("email",user.getEmail());
         result.put("name",user.getName());
         result.put("img_url",user.getImg_url());

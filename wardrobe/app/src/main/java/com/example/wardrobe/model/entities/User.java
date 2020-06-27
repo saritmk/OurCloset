@@ -17,11 +17,11 @@ public class User {
     public User(){}
 
     @NonNull
-    public String getUid() {
+    public String getId() {
         return id;
     }
 
-    public void setUid(@NonNull String uid) {
+    public void setId(@NonNull String uid) {
         this.id = id;
     }
 
