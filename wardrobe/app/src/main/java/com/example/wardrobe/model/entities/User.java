@@ -9,10 +9,10 @@ public class User {
 
     @PrimaryKey
     @NonNull
-    public String id;
-    public String name;
-    public String img_url;
-    public String email;
+    private String id;
+    private String name;
+    private String img_url;
+    private String email;
 
     public User(){}
 
