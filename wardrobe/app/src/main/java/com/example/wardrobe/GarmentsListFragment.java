@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class ClosetListFragment extends Fragment {
+public class GarmentsListFragment extends Fragment {
     RecyclerView list;
     List<Garment> data = new LinkedList<Garment>();
     GarmentListAdapter adapter;
@@ -39,7 +39,7 @@ public class ClosetListFragment extends Fragment {
 
     Delegate parent;
 
-    public ClosetListFragment() {
+    public GarmentsListFragment() {
 //        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
 //            @Override
 //            public void onComplete(List<Garment> _data) {

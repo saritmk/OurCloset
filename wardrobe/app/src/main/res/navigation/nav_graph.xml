@@ -6,7 +6,7 @@
     app:startDestination="@id/closetListFragment">
     <fragment
         android:id="@+id/closetListFragment"
-        android:name="com.example.wardrobe.ClosetListFragment"
+        android:name="com.example.wardrobe.GarmentsListFragment"
         android:label="fragment_closet_list"
         tools:layout="@layout/fragment_closet_list" />
     <fragment
@@ -34,7 +34,7 @@
         tools:layout="@layout/fragment_friends_list" />
     <fragment
         android:id="@+id/transactionListFragment"
-        android:name="com.example.wardrobe.transactionListFragment"
+        android:name="com.example.wardrobe.TransactionListFragment"
         android:label="fragment_transaction_list"
         tools:layout="@layout/fragment_transaction_list" />
     <fragment

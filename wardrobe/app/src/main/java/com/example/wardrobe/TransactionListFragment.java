@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link transactionListFragment#newInstance} factory method to
+ * Use the {@link TransactionListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class transactionListFragment extends Fragment {
+public class TransactionListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,7 +23,7 @@ public class transactionListFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public transactionListFragment() {
+    public TransactionListFragment() {
         // Required empty public constructor
     }
 
@@ -36,8 +36,8 @@ public class transactionListFragment extends Fragment {
      * @return A new instance of fragment transactionListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static transactionListFragment newInstance(String param1, String param2) {
-        transactionListFragment fragment = new transactionListFragment();
+    public static TransactionListFragment newInstance(String param1, String param2) {
+        TransactionListFragment fragment = new TransactionListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

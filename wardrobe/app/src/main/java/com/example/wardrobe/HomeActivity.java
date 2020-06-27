@@ -11,7 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity implements ClosetListFragment.Delegate{
+public class HomeActivity extends AppCompatActivity implements GarmentsListFragment.Delegate{
     NavController navCtrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity implements ClosetListFragmen
     @Override
     public void onItemSelected(Garment garment) {
         NavController navCtrl = Navigation.findNavController(this, R.id.home_nav_host);
-        NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = ClosetListFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
+        NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentsListFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
         navCtrl.navigate(direction);
     }
 

@@ -72,11 +72,11 @@ public class TransactionRequestsModel {
         return null;
     }
 
-    public void update(TransactionRequest transactionRequest){
-
+    public void addNewTransaction(TransactionRequest transactionRequest, Listener<Boolean> listener){
+        TransactionRequestsFirebase.addTransaction(transactionRequest, listener);
     }
 
-    public void delete(TransactionRequest transactionRequest){
+    public void deleteTransaction(TransactionRequest transactionRequest,  Listener<Boolean> listener){
 
     }
 
