@@ -10,6 +10,9 @@ public class Friendship {
 
     @PrimaryKey
     @NonNull
+    private String friendship_id;
+
+    @NonNull
     private String id_1;
 
     @NonNull
@@ -35,4 +38,12 @@ public class Friendship {
         this.id_2 = id2;
     }
 
+    @NonNull
+    public String getFriendship_id() {
+        return friendship_id;
+    }
+
+    public void setFriendship_id(@NonNull String friendship_id) {
+        this.friendship_id = friendship_id;
+    }
 }

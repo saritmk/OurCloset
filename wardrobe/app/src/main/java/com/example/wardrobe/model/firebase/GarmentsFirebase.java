@@ -6,6 +6,7 @@ import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,13 +38,19 @@ public class GarmentsFirebase {
     }
 
     public void addGarment(Garment garmentToAdd, final GarmentsModel.Listener<Boolean> listener){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(GARMENTS_COLLECTION).document().set(toJson(garmentToAdd)).addOnCompleteListener(new OnCompleteListener<Void>() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(GARMENTS_COLLECTION).add(toJson(garmentToAdd)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (listener!=null){
-                    listener.onComplete(task.isSuccessful());
-                }
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                String id = task.getResult().getId();
+                db.collection(GARMENTS_COLLECTION).document(id).update("id",id).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (listener!=null){
+                            listener.onComplete(task.isSuccessful());
+                        }
+                    }
+                });
             }
         });
     }

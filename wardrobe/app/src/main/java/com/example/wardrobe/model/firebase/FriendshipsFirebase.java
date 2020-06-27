@@ -6,6 +6,7 @@ import com.example.wardrobe.model.FriendshipModel;
 import com.example.wardrobe.model.entities.Friendship;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -48,19 +49,25 @@ public class FriendshipsFirebase {
         });
     }
 
-    public void addGarment(Friendship friendshipToAdd, final FriendshipModel.Listener<Boolean> listener){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(FRIENDSHIPS_COLLECTION).document().set(toJson(friendshipToAdd)).addOnCompleteListener(new OnCompleteListener<Void>() {
+    public void addFriendship(Friendship friendshipToAdd, final FriendshipModel.Listener<Boolean> listener){
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(FRIENDSHIPS_COLLECTION).add(toJson(friendshipToAdd)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (listener!=null){
-                    listener.onComplete(task.isSuccessful());
-                }
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                String friendship_id = task.getResult().getId();
+                db.collection(FRIENDSHIPS_COLLECTION).document(friendship_id).update("friendship_id",friendship_id).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (listener!=null){
+                            listener.onComplete(task.isSuccessful());
+                        }
+                    }
+                });
             }
         });
     }
 
-    public void deleteGarment(String friendshipId, final FriendshipModel.Listener<Boolean> listener) {
+    public void deleteFriendship(String friendshipId, final FriendshipModel.Listener<Boolean> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FRIENDSHIPS_COLLECTION).document(friendshipId)
                 .delete()
@@ -76,6 +83,7 @@ public class FriendshipsFirebase {
 
     private static Map<String, Object> toJson(Friendship friendship){
         HashMap<String, Object> result = new HashMap<>();
+        result.put("friendship_id", friendship.getFriendship_id());
         result.put("id_1", friendship.getId_1());
         result.put("id_2", friendship.getId_2());
         return result;
