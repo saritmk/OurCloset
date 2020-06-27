@@ -1,5 +1,6 @@
 package com.example.wardrobe;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,15 +9,27 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.wardrobe.model.entities.Garment;
 
 public class GarmentDetailsFragment extends Fragment {
     Garment garment;
     TextView id;
+    // TODO: Delete!! this is a temporery test
+    AddTransactionViewModel viewModel;
 
     public GarmentDetailsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(AddTransactionViewModel.class);
+
+        // Only Test
+        viewModel.addNewTransaction("1","2","I want this");
     }
 
     @Override

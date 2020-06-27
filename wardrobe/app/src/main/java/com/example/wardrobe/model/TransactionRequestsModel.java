@@ -76,8 +76,16 @@ public class TransactionRequestsModel {
         TransactionRequestsFirebase.addTransaction(transactionRequest, listener);
     }
 
-    public void deleteTransaction(TransactionRequest transactionRequest,  Listener<Boolean> listener){
-
+    public void deleteTransaction(final TransactionRequest transactionRequest, final Listener<Boolean> listener){
+        TransactionRequestsFirebase.deleteTransaction(transactionRequest.getTransaction_id(), new Listener<Boolean>() {
+            @Override
+            public void onComplete(Boolean data) {
+                if(data) {
+                    AppLocalDb.db.transactionDao().delete(transactionRequest);
+                    listener.onComplete(true);
+                }
+            }
+        });
     }
 
     public LiveData<List<TransactionRequest>> getAllBorrowedFromTransactions(String user_id){
