@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,9 +21,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.example.wardrobe.model.GarmentsModel;
+import com.example.wardrobe.model.entities.Garment;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class NewGramentFragment extends Fragment {
@@ -38,9 +46,12 @@ public class NewGramentFragment extends Fragment {
     };
 
     private File tempFile;
-
-
-
+    private EditText sizeText;
+    private EditText typeText;
+    private EditText colorText;
+    private ImageView imgViewAdd;
+    private Button btnAddPhoto;
+    private Button btnSave;
     public NewGramentFragment() {
         // Required empty public constructor
     }
@@ -50,11 +61,22 @@ public class NewGramentFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_grament, container, false);
-        Button btnAddPhoto = v.findViewById(R.id.new_garment_photo_button);
+        this.colorText = v.findViewById(R.id.new_garment_color);
+        this.typeText = v.findViewById(R.id.new_garment_type);
+        this.sizeText = v.findViewById(R.id.new_garment_size);
+        this.imgViewAdd = v.findViewById(R.id.imgViewAdd);
+        btnAddPhoto = v.findViewById(R.id.new_garment_photo_button);
         btnAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vi) {
                 NewGramentFragment.this.takePicture();
+            }
+        });
+        btnSave = v.findViewById(R.id.new_garment_save_button);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View vi) {
+                NewGramentFragment.this.saveGarment();
             }
         });
 
@@ -86,7 +108,27 @@ public class NewGramentFragment extends Fragment {
         } else {
             Log.d(TAG, "takePicture: ask user for permissions");
             ActivityCompat.requestPermissions(getActivity(),CAMERA_AND_STORAGE_PERMISSION, REQUEST_CAMERA_AND_STORAGE);
+        }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: get result from camera");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE &&
+                resultCode == RESULT_OK) {
+            // add image to gallery
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri contentUri = Uri.fromFile(tempFile);
+            mediaScanIntent.setData(contentUri);
+            getActivity().sendBroadcast(mediaScanIntent);
+            imgViewAdd.setImageURI(contentUri);
+        } else {
+            Log.e(TAG, "onActivityResult: could not get camera data");
+            tempFile.delete();
+            tempFile = null;
+            Toast.makeText(getActivity(), "change it later", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private File createTmpFile() {
@@ -164,5 +206,25 @@ public class NewGramentFragment extends Fragment {
             }
         }
         return true;
+    }
+
+    public void saveGarment() {
+        GarmentsModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
+            @Override
+            public void onSuccess(Object newImageUrl) {
+                btnAddPhoto.setEnabled(false);
+                btnSave.setEnabled(false);
+                Garment garment = new Garment("//tmp", "1", NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
+                garment.setImageUrl(newImageUrl.toString());
+                GarmentsModel.instance.addNewGarment(garment, new GarmentsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean data) {
+                        Log.d("TAG", "added");
+                        //NavController navController = Navigation.findNavController(getActivity(), R.id.fragment_closet_list);
+                        //navController.popBackStack();
+                    }
+                });
+            }
+        });
     }
 }

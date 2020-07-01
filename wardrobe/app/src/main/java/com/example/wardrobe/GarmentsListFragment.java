@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -123,7 +124,6 @@ public class GarmentsListFragment extends Fragment {
 
         public GarmentItemViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
-            id = itemView.findViewById(R.id.garment_item_id_tv);
             image = itemView.findViewById(R.id.garment_item_image);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +140,10 @@ public class GarmentsListFragment extends Fragment {
         }
 
         public void bind(Garment gr) {
-            id.setText(gr.getId());
+            if (gr.getImageUrl() != null && gr.getImageUrl() != "") {
+                Picasso.get().load(gr.getImageUrl()).into(image);
+            }
+
             garment = gr;
         }
     }

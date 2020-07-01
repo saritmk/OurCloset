@@ -68,7 +68,7 @@ public class Garment implements Serializable {
     }
 
     public Garment(){}
-    public Garment(String id, String imageUrl, String owner_id, String type, String color, String size) {
+    public Garment(String imageUrl, String owner_id, String type, String color, String size) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.color = color;
