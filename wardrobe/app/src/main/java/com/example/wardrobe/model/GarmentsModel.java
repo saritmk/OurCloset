@@ -1,12 +1,22 @@
 package com.example.wardrobe.model;
 
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.firebase.GarmentsFirebase;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.List;
 
 public class GarmentsModel {
@@ -55,6 +65,7 @@ public class GarmentsModel {
 
     public void addNewGarment(Garment garment, Listener<Boolean> listener){
         GarmentsFirebase.addGarment(garment, listener);
+        //AppLocalDb.db.garmentDao().insertAll(garment);
     }
 
     public void update(Garment garment, Listener<Boolean> listener){
@@ -74,6 +85,29 @@ public class GarmentsModel {
     }
 
 
+    public static void saveImage(File image, String uid, final OnSuccessListener<Object> listener) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        final StorageReference imageRef = storage.getReference().child("images").child(uid);
+        Uri fileUri = Uri.fromFile(image);
+
+        UploadTask uploadTask = imageRef.putFile(fileUri);
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Exception e = task.getException();
+                    Log.e("CHANGE IT", e.toString());
+                }
+                return imageRef.getDownloadUrl();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Object>() {
+            @Override
+            public void onSuccess(Object task) {
+                listener.onSuccess(task);
+            }
+        });
+    }
 
 
 

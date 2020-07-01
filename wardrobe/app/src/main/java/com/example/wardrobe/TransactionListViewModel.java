@@ -1,24 +1,30 @@
 package com.example.wardrobe;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.wardrobe.model.TransactionRequestsModel;
 import com.example.wardrobe.model.entities.TransactionRequest;
 
 import java.util.List;
 
-public class TransactionListViewModel {
+public class TransactionListViewModel extends ViewModel {
     LiveData<List<TransactionRequest>> liveData;
     Boolean borrowedFromMe = true;
-    String user_id = "1";
+    String user_id = "2";
 
+    public void SetBorrowedFromMe(Boolean isBorrowed) {
+        borrowedFromMe = isBorrowed;
+    }
+    public Boolean getBorrowedFromMe() {
+        return borrowedFromMe;
+    }
     public LiveData<List<TransactionRequest>> getData() {
-        if (liveData == null) {
-            if(borrowedFromMe)
-                liveData = TransactionRequestsModel.instance.getAllBorrowedFromTransactions(user_id);
-            else
-                liveData = TransactionRequestsModel.instance.getAllLentToTransactions(user_id);
-        }
+        if(borrowedFromMe)
+            liveData = TransactionRequestsModel.instance.getAllBorrowedFromTransactions(user_id);
+        else
+            liveData = TransactionRequestsModel.instance.getAllLentToTransactions(user_id);
+
         return liveData;
     }
 
