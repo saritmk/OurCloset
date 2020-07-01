@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.wardrobe.model.FriendshipModel;
-import com.example.wardrobe.model.entities.Friendship;
+import com.example.wardrobe.model.UsersModel;
+import com.example.wardrobe.model.entities.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,13 +27,13 @@ import java.util.List;
 
 public class FriendsListFragment extends Fragment {
     RecyclerView list;
-    List<Friendship> data = new LinkedList<Friendship>();
-    FriendshipListAdapter adapter;
-    FriendsListViewModel viewModel;
-    LiveData<List<Friendship>> liveData;
+    List<User> data = new LinkedList<User>();
+    FriendListAdapter adapter;
+    UsersViewModel viewModel;
+    LiveData<List<User>> liveData;
 
     interface Delegate{
-        void onItemSelected(Friendship friend);
+        void onItemSelected(User friend);
     }
 
     Delegate parent;
@@ -52,7 +52,7 @@ public class FriendsListFragment extends Fragment {
 //                    + "student list parent activity must implement dtudent ;list fragment Delegate");
 //        }
 
-        viewModel = new ViewModelProvider(this).get(FriendsListViewModel.class);
+        viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
     }
 
     @Override
@@ -66,13 +66,13 @@ public class FriendsListFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
 
-        adapter = new FriendshipListAdapter();
+        adapter = new FriendListAdapter();
         list.setAdapter(adapter);
 
         liveData = viewModel.getData();
-        liveData.observe(getViewLifecycleOwner(), new Observer<List<Friendship>>() {
+        liveData.observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @Override
-            public void onChanged(List<Friendship> friends) {
+            public void onChanged(List<User> friends) {
                 data = friends;
                 adapter.notifyDataSetChanged();
             }
@@ -82,7 +82,7 @@ public class FriendsListFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                viewModel.refresh(new FriendshipModel.CompListener() {
+                viewModel.refresh(new UsersModel.CompListener() {
                     @Override
                     public void onComplete() {
                         swipeRefresh.setRefreshing(false);
@@ -95,12 +95,12 @@ public class FriendsListFragment extends Fragment {
     }
 
 
-    static class FriendshipItemViewHolder extends RecyclerView.ViewHolder{
+    static class FriendItemViewHolder extends RecyclerView.ViewHolder{
         TextView id;
         ImageView image;
-        Friendship friendship;
+        User friend;
 
-        public FriendshipItemViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+        public FriendItemViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             id = itemView.findViewById(R.id.friend_item_id_tv);
             image = itemView.findViewById(R.id.friend_item_image);
@@ -118,9 +118,12 @@ public class FriendsListFragment extends Fragment {
             });
         }
 
-        public void bind(Friendship friend) {
-            id.setText(friend.getId_2());
-            friendship = friend;
+        public void bind(User friend) {
+            id.setText(friend.getUser_id());
+            friend.setName(friend.getName());
+            friend.setImg_url(friend.getImg_url());
+            friend.setUser_id(friend.getUser_id());
+            friend.setEmail(friend.getEmail());
         }
     }
 
@@ -128,7 +131,7 @@ public class FriendsListFragment extends Fragment {
         void onClick(int position);
     }
 
-    class FriendshipListAdapter extends RecyclerView.Adapter<FriendshipItemViewHolder>{
+    class FriendListAdapter extends RecyclerView.Adapter<FriendItemViewHolder>{
         private OnItemClickListener listener;
 
         void setOnIntemClickListener(OnItemClickListener listener){
@@ -137,16 +140,16 @@ public class FriendsListFragment extends Fragment {
 
         @NonNull
         @Override
-        public FriendshipItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        public FriendItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(getActivity()).inflate(R.layout.friendship_item, viewGroup,false );
-            FriendshipItemViewHolder vh = new FriendshipItemViewHolder(v, listener);
+            FriendItemViewHolder vh = new FriendItemViewHolder(v, listener);
             return vh;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull FriendshipItemViewHolder friendshipItemViewHolder, int position) {
-            Friendship friend = data.get(position);
-            friendshipItemViewHolder.bind(friend);
+        public void onBindViewHolder(@NonNull FriendItemViewHolder friendItemViewHolder, int position) {
+            User friend = data.get(position);
+            friendItemViewHolder.bind(friend);
         }
 
         @Override

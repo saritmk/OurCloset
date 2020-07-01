@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/closetListFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/closetListFragment"
         android:name="com.example.wardrobe.GarmentsListFragment"
@@ -45,5 +45,16 @@
         <argument
             android:name="garment"
             app:argType="com.example.wardrobe.model.entities.Garment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.wardrobe.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_garmentsListFragment"
+            app:destination="@id/closetListFragment"
+            app:popUpTo="@+id/mainFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

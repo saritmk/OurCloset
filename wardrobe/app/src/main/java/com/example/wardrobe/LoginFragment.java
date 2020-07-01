@@ -55,7 +55,9 @@ public class LoginFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        final View view = inflater.inflate(R.layout.fragment_login, container, false);
+        view.findViewById(R.id.sign_in_btn).setOnClickListener(this);
+        return view;
     }
 
     @Override
@@ -106,8 +108,11 @@ public class LoginFragment extends Fragment implements
 
                 userViewModel.saveUser(newUser);
 
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_controller_view_tag);
+                NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
+                navController.navigate(R.id.action_loginFragment_to_garmentsListFragment);
             }
         }, getActivity());
     }
+
+
 }

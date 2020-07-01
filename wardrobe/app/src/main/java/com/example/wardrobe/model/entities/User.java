@@ -11,26 +11,33 @@ public class User {
 
     @PrimaryKey
     @NonNull
-    private String id;
+    private String user_id;
     private String name;
     private String img_url;
     private String email;
 
     public User(){}
+
+    public User(String user_id, String name, String img_url, String email){
+        this.setUser_id(user_id);
+        this.setImg_url(img_url);
+        this.setName(name);
+        this.setEmail(email);
+    }
     public User(FirebaseUser currentUser) {
-        this.setId(currentUser.getUid());
+        this.setUser_id(currentUser.getUid());
         this.setImg_url(currentUser.getPhotoUrl().toString());
         this.setName(currentUser.getDisplayName());
         this.setEmail(currentUser.getEmail());
     }
 
     @NonNull
-    public String getId() {
-        return id;
+    public String getUser_id() {
+        return this.user_id;
     }
 
-    public void setId(@NonNull String uid) {
-        this.id = id;
+    public void setUser_id(@NonNull String user_id) {
+        this.user_id = user_id;
     }
 
     public String getName() {
