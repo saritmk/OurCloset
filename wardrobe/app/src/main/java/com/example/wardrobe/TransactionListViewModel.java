@@ -9,7 +9,8 @@ import com.example.wardrobe.model.entities.TransactionRequest;
 import java.util.List;
 
 public class TransactionListViewModel extends ViewModel {
-    LiveData<List<TransactionRequest>> liveData;
+    LiveData<List<TransactionRequest>> borrowedFromMeliveData;
+    LiveData<List<TransactionRequest>> lentToMeliveData;
     Boolean borrowedFromMe = true;
     String user_id = "2";
 
@@ -20,12 +21,16 @@ public class TransactionListViewModel extends ViewModel {
         return borrowedFromMe;
     }
     public LiveData<List<TransactionRequest>> getData() {
-        if(borrowedFromMe)
-            liveData = TransactionRequestsModel.instance.getAllBorrowedFromTransactions(user_id);
-        else
-            liveData = TransactionRequestsModel.instance.getAllLentToTransactions(user_id);
-
-        return liveData;
+        if(borrowedFromMe) {
+            if(borrowedFromMeliveData == null)
+                borrowedFromMeliveData = TransactionRequestsModel.instance.getAllBorrowedFromTransactions(user_id);
+            return borrowedFromMeliveData;
+        }
+        else {
+            if(lentToMeliveData == null)
+                lentToMeliveData = TransactionRequestsModel.instance.getAllLentToTransactions(user_id);
+            return lentToMeliveData;
+        }
     }
 
     public void refresh(TransactionRequestsModel.CompListener listener) {

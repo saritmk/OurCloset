@@ -19,7 +19,7 @@ public interface TransactionDao {
     @Query("SELECT * FROM TransactionRequest WHERE borrow_user_id= :user_id")
     LiveData<List<TransactionRequest>> getAllLentTo(String user_id);
 
-    @Query("SELECT * FROM TransactionRequest WHERE lend_user_id = :user_id")
+    @Query("SELECT * FROM TransactionRequest WHERE lend_user_id= :user_id")
     LiveData<List<TransactionRequest>> getAllBorrowedFrom(String user_id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

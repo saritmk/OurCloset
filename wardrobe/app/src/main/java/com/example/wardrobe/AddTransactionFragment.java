@@ -26,9 +26,6 @@ public class AddTransactionFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-
-        // Only Test
-        viewModel.addNewTransaction("1","2","I want this");
     }
 
     @Override

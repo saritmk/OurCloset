@@ -27,7 +27,10 @@ import java.util.List;
 
 public class TransactionListFragment extends Fragment {
     RecyclerView list;
-    List<TransactionRequest> data = new LinkedList<TransactionRequest>();
+    boolean isBorrowedFromMe;
+    List<TransactionRequest> borrowedData = new LinkedList<TransactionRequest>();
+    List<TransactionRequest> lentData = new LinkedList<TransactionRequest>();
+    List<TransactionRequest> data = new LinkedList<>();
     TransactionListAdapter adapter;
     TransactionListViewModel viewModel;
     LiveData<List<TransactionRequest>> liveData;
@@ -88,7 +91,13 @@ public class TransactionListFragment extends Fragment {
         liveData.observe(getViewLifecycleOwner(), new Observer<List<TransactionRequest>>() {
             @Override
             public void onChanged(List<TransactionRequest> transactionRequests) {
-                data = transactionRequests;
+                if(isBorrowedFromMe){
+                    borrowedData = transactionRequests;
+                }
+                else{
+                    lentData = transactionRequests;
+                }
+
                 adapter.notifyDataSetChanged();
             }
         });
@@ -125,6 +134,7 @@ public class TransactionListFragment extends Fragment {
 
 
     private void onLentToMeButtonClick(View view){
+        data = lentData;
         viewModel.SetBorrowedFromMe(false);
         liveData = viewModel.getData();
 
@@ -137,6 +147,7 @@ public class TransactionListFragment extends Fragment {
     }
 
     private void onBorrwedFromMeButtonClick(View view){
+        data = borrowedData;
         viewModel.SetBorrowedFromMe(true);
         viewModel.refresh(new TransactionRequestsModel.CompListener() {
             @Override
