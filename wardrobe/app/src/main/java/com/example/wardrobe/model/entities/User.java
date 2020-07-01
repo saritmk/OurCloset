@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.auth.FirebaseUser;
+
 @Entity
 public class User {
 
@@ -15,6 +17,12 @@ public class User {
     private String email;
 
     public User(){}
+    public User(FirebaseUser currentUser) {
+        this.setId(currentUser.getUid());
+        this.setImg_url(currentUser.getPhotoUrl().toString());
+        this.setName(currentUser.getDisplayName());
+        this.setEmail(currentUser.getEmail());
+    }
 
     @NonNull
     public String getId() {
