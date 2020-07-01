@@ -11,7 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity implements GarmentsListFragment.Delegate{
+public class HomeActivity extends AppCompatActivity implements GarmentsListFragment.Delegate {
     NavController navCtrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

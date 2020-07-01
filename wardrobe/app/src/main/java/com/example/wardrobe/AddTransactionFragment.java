@@ -45,7 +45,6 @@ public class AddTransactionFragment extends Fragment {
         return view;
     }
     private void update_display() {
-        //id.setText(garment.id);
     }
 
 }
