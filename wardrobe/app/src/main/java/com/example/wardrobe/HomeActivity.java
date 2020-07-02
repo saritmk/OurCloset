@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity implements GarmentsListFragment.Delegate {
     NavController navCtrl;
@@ -18,11 +19,26 @@ public class HomeActivity extends AppCompatActivity implements GarmentsListFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        navCtrl = Navigation.findNavController(this,R.id.home_nav_host);
+
         navCtrl = Navigation.findNavController(this,R.id.home_nav_host);
         NavigationUI.setupActionBarWithNavController(this,navCtrl);
 
         BottomNavigationView bottomNav = findViewById(R.id.home_bottomNavigationView);
         NavigationUI.setupWithNavController(bottomNav, navCtrl);
+
+        if (auth.getCurrentUser() == null) {
+            if (navCtrl.getCurrentDestination().getId() != R.id.loginFragment) {
+                navCtrl.navigate(R.id.loginFragment);
+            }
+        } else {
+            if (navCtrl.getCurrentDestination().getId() != R.id.closetListFragment) {
+                navCtrl.navigate(R.id.closetListFragment);
+            }
+        }
+
     }
 
     @Override
