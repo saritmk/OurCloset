@@ -12,8 +12,9 @@ public class TransactionListViewModel extends ViewModel {
     LiveData<List<TransactionRequest>> borrowedFromMeliveData;
     LiveData<List<TransactionRequest>> lentToMeliveData;
     Boolean borrowedFromMe = true;
-    String user_id = "2";
+    String user_id;
 
+    public void SetCurrentUserId(String user_id) { this.user_id = user_id; }
     public void SetBorrowedFromMe(Boolean isBorrowed) {
         borrowedFromMe = isBorrowed;
     }

@@ -20,6 +20,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.TransactionRequestsModel;
 import com.example.wardrobe.model.entities.TransactionRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,6 +63,13 @@ public class TransactionListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            viewModel.SetCurrentUserId(user.getUid());
+        }
+
+
         // Inflate the layout for this fragment
         final View view =  inflater.inflate(R.layout.fragment_transaction_list, container, false);
         list = view.findViewById(R.id.transactions_list);
