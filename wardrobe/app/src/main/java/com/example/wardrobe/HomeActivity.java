@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity implements GarmentsListFragment.Delegate {
     NavController navCtrl;
@@ -35,7 +36,7 @@ public class HomeActivity extends AppCompatActivity implements GarmentsListFragm
             }
         } else {
             if (navCtrl.getCurrentDestination().getId() != R.id.closetListFragment) {
-                navCtrl.navigate(R.id.closetListFragment);
+               navCtrl.navigate(R.id.closetListFragment);
             }
         }
 

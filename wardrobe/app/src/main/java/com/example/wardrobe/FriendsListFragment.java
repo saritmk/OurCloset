@@ -1,7 +1,9 @@
 package com.example.wardrobe;
 
+import android.app.Notification;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.UsersModel;
+import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -69,6 +74,16 @@ public class FriendsListFragment extends Fragment {
         adapter = new FriendListAdapter();
         list.setAdapter(adapter);
 
+        adapter.setOnIntemClickListener(new OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d("TAG","row was clicked" + position);
+                User friend = data.get(position);
+                FriendsListFragmentDirections.ActionFriendsListFragmentToFriendsGarmentsListFragment direction = FriendsListFragmentDirections.actionFriendsListFragmentToFriendsGarmentsListFragment(friend.getUser_id());
+                Navigation.findNavController(view).navigate(direction);
+            }
+        });
+
         liveData = viewModel.getData();
         liveData.observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @Override
@@ -97,12 +112,14 @@ public class FriendsListFragment extends Fragment {
 
     static class FriendItemViewHolder extends RecyclerView.ViewHolder{
         TextView id;
+        TextView name;
         ImageView image;
         User friend;
 
         public FriendItemViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             id = itemView.findViewById(R.id.friend_item_id_tv);
+            name = itemView.findViewById(R.id.friend_item_name_tv);
             image = itemView.findViewById(R.id.friend_item_image);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -120,10 +137,15 @@ public class FriendsListFragment extends Fragment {
 
         public void bind(User friend) {
             id.setText(friend.getUser_id());
-            friend.setName(friend.getName());
-            friend.setImg_url(friend.getImg_url());
-            friend.setUser_id(friend.getUser_id());
-            friend.setEmail(friend.getEmail());
+            name.setText(friend.getName());
+            if (friend.getImg_url() != null && friend.getImg_url() != "") {
+                Picasso.get().load(friend.getImg_url()).into(image);
+            }
+            this.friend = new User();
+            this.friend.setName(friend.getName());
+            this.friend.setImg_url(friend.getImg_url());
+            this.friend.setUser_id(friend.getUser_id());
+            this.friend.setEmail(friend.getEmail());
         }
     }
 

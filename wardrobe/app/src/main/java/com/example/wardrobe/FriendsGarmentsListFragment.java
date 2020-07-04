@@ -21,15 +21,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class GarmentsListFragment extends Fragment {
+public class FriendsGarmentsListFragment extends Fragment {
     String owner_id="";
     RecyclerView list;
     List<Garment> data = new LinkedList<Garment>();
@@ -43,50 +41,29 @@ public class GarmentsListFragment extends Fragment {
 
     Delegate parent;
 
-    public GarmentsListFragment() {
-//        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
-//            @Override
-//            public void onComplete(List<Garment> _data) {
-//                data = _data;
-//                if(adapter != null) {
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
+    public FriendsGarmentsListFragment() {
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Delegate) {
-            parent = (Delegate) getActivity();
-        } else {
-            throw new RuntimeException(context.toString()
-                    + "student list parent activity must implement dtudent ;list fragment Delegate");
-        }
 
         viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser currUser = auth.getCurrentUser();
-
-        if(currUser != null){
-            owner_id = currUser.getUid();
-            viewModel.SetOwnerId(owner_id);
-        }
-
+        owner_id = FriendsGarmentsListFragmentArgs.fromBundle(getArguments()).getOwnerId();
+        viewModel.SetOwnerId(owner_id);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view =  inflater.inflate(R.layout.fragment_closet_list, container, false);
-        list = view.findViewById(R.id.closet_list_list);
+        final View view =  inflater.inflate(R.layout.fragment_friends_closet_list, container, false);
+        list = view.findViewById(R.id.friend_closet_list_list);
         list.setHasFixedSize(true);
 
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
+
 
         adapter = new GarmentListAdapter();
         list.setAdapter(adapter);
@@ -102,7 +79,6 @@ public class GarmentsListFragment extends Fragment {
             }
         });
 
-
         liveData = viewModel.getData();
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
             @Override
@@ -112,7 +88,7 @@ public class GarmentsListFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.closet_list_swipe_refresh);
+        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.friend_closet_list_swipe_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

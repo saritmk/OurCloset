@@ -8,7 +8,8 @@
         android:id="@+id/closetListFragment"
         android:name="com.example.wardrobe.GarmentsListFragment"
         android:label="fragment_closet_list"
-        tools:layout="@layout/fragment_closet_list" />
+        tools:layout="@layout/fragment_closet_list" >
+    </fragment>
     <fragment
         android:id="@+id/garmentDetailsFragment"
         android:name="com.example.wardrobe.GarmentDetailsFragment"
@@ -31,7 +32,29 @@
         android:id="@+id/friendsFragment"
         android:name="com.example.wardrobe.FriendsListFragment"
         android:label="fragment_friends"
-        tools:layout="@layout/fragment_friends_list" />
+        tools:layout="@layout/fragment_friends_list">
+    <action
+        android:id="@+id/action_friendsListFragment_to_friendsGarmentsListFragment"
+        app:destination="@id/friendsClosetListFragment" >
+        <argument
+            android:name="owner_id"
+            app:argType="string"
+            app:nullable="true"/>
+    </action>
+    </fragment>
+    <fragment
+        android:id="@+id/friendsClosetListFragment"
+        android:name="com.example.wardrobe.FriendsGarmentsListFragment"
+        android:label="fragment_friends_closet_list"
+        tools:layout="@layout/fragment_friends_closet_list" >
+<!--        <argument-->
+<!--            android:name="owner_id"-->
+<!--            app:argType="String"/>-->
+        <argument
+            android:name="owner_id"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/transactionListFragment"
         android:name="com.example.wardrobe.TransactionListFragment"
