@@ -1,6 +1,7 @@
 package com.example.wardrobe;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,10 +21,13 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +37,7 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class NewGramentFragment extends Fragment {
+    GarmentsViewModel viewModel;
     private static final String TAG = "NewGramentFragment";
     private static final String APP_NAME = "wardrobe";
 
@@ -82,7 +87,12 @@ public class NewGramentFragment extends Fragment {
 
         return v;
     }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
+        viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
+    }
 
     public void takePicture() {
         Log.d(TAG, "takePicture: check if app has permissions");
@@ -209,21 +219,24 @@ public class NewGramentFragment extends Fragment {
     }
 
     public void saveGarment() {
-        GarmentsModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
+        viewModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
             @Override
             public void onSuccess(Object newImageUrl) {
                 btnAddPhoto.setEnabled(false);
                 btnSave.setEnabled(false);
-                Garment garment = new Garment("//tmp", "1", NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
-                garment.setImageUrl(newImageUrl.toString());
-                GarmentsModel.instance.addNewGarment(garment, new GarmentsModel.Listener<Boolean>() {
-                    @Override
-                    public void onComplete(Boolean data) {
-                        Log.d("TAG", "added");
-                        //NavController navController = Navigation.findNavController(getActivity(), R.id.fragment_closet_list);
-                        //navController.popBackStack();
-                    }
-                });
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if(currentUser != null){
+                    String uId = currentUser.getUid();
+                    Garment garment = new Garment(newImageUrl.toString(), uId, NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
+                    viewModel.addNewGarment(garment, new GarmentsModel.CompListener() {
+                        @Override
+                        public void onComplete() {
+                            // Do something
+                        }
+                    });
+                }
+
             }
         });
     }

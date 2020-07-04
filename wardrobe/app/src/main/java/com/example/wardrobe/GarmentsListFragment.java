@@ -21,6 +21,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -31,7 +33,7 @@ public class GarmentsListFragment extends Fragment {
     RecyclerView list;
     List<Garment> data = new LinkedList<Garment>();
     GarmentListAdapter adapter;
-    GarmentsListViewModel viewModel;
+    GarmentsViewModel viewModel;
     LiveData<List<Garment>> liveData;
 
     interface Delegate{
@@ -62,7 +64,10 @@ public class GarmentsListFragment extends Fragment {
                     + "student list parent activity must implement dtudent ;list fragment Delegate");
         }
 
-        viewModel = new ViewModelProvider(this).get(GarmentsListViewModel.class);
+        viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currUser = auth.getCurrentUser();
+        viewModel.SetOwnerId(currUser.getUid());
     }
 
     @Override
