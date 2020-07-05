@@ -29,10 +29,19 @@ public class GarmentsViewModel extends ViewModel {
         GarmentsModel.instance.refreshGarmentsList(owner_id,listener);
     }
 
+    public void getGarment(String garmentId, GarmentsModel.Listener<Garment> listener){
+        Garment garment = GarmentsModel.instance.getGarment(garmentId);
+        listener.onComplete(garment);
+    }
+
     public void addNewGarment(Garment newGarment, GarmentsModel.CompListener listener){
         GarmentsModel.instance.addNewGarment(newGarment,null);
     }
     public void saveImage(File image, String Uid, OnSuccessListener listener){
         GarmentsModel.saveImage(image,Uid,listener);
+    }
+
+    public void updateGarment(Garment garmentToUpdate, GarmentsModel.Listener<Boolean> listener){
+        GarmentsModel.instance.update(garmentToUpdate,listener);
     }
 }

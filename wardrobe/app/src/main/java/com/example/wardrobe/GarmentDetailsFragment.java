@@ -23,7 +23,7 @@ public class GarmentDetailsFragment extends Fragment {
     TextView SizeTextView;
     TextView TypeTextView;
     ImageView ImageView;
-    Button TransactionButton;
+    Button EditButton;
 
     // TODO: Delete!! this is a temporery test
     TransactionViewModel viewModel;
@@ -51,23 +51,25 @@ public class GarmentDetailsFragment extends Fragment {
         SizeTextView = view.findViewById(R.id.garment_details_size);
         TypeTextView = view.findViewById(R.id.garment_details_Type);
         ImageView = view.findViewById(R.id.garment_details_img);
-        TransactionButton = view.findViewById(R.id.garment_details_transaction_button);
+        EditButton = view.findViewById(R.id.garment_details_edit_button);
 
         garment = GarmentDetailsFragmentArgs.fromBundle(getArguments()).getGarment();
         if (garment != null){
             update_display();
         }
-        TransactionButton.setOnClickListener(new View.OnClickListener() {
+        EditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GarmentDetailsFragment.this.onAddTransactionButton();
+                GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToEditGarmentFragment direction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToEditGarmentFragment("Edit",garment.getId());
+                Navigation.findNavController(v).navigate(direction);
             }
         });
 
         return view;
     }
 
-    private void onAddTransactionButton(){
+    private void onAddEditButton(){
+        // TODO
         GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToAddTransactionFragment diraction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToAddTransactionFragment(garment);
         Navigation.findNavController(getView()).navigate(diraction);
     }

@@ -12,7 +12,7 @@ import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.TransactionRequest;
 import com.example.wardrobe.model.entities.User;
 
-@Database(entities = {Garment.class, TransactionRequest.class, Friendship.class, User.class}, version = 6)
+@Database(entities = {Garment.class, TransactionRequest.class, Friendship.class, User.class}, version = 7)
 public abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract GarmentDao garmentDao();
     public abstract TransactionDao transactionDao();

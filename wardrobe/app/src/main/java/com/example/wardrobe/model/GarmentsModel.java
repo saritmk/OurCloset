@@ -59,8 +59,10 @@ public class GarmentsModel {
         return liveData;
     }
 
-    public Garment getGarment(String id){
-        return null;
+    public Garment getGarment(String id)
+    {
+        Garment garment = AppLocalDb.db.garmentDao().getGarment(id);
+        return garment;
     }
 
     public void addNewGarment(Garment garment, Listener<Boolean> listener){

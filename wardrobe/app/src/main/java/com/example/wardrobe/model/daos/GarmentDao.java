@@ -16,6 +16,9 @@ public interface GarmentDao {
     @Query("SELECT * FROM Garment WHERE owner_id = :owner_id")
     LiveData<List<Garment>> getAll(String owner_id);
 
+    @Query("SELECT * FROM Garment WHERE id = :id")
+    Garment getGarment(String id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Garment... garments);
 

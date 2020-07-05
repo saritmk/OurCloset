@@ -21,13 +21,35 @@
         <action
             android:id="@+id/action_garmentDetailsFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment" />
+        <action
+            android:id="@+id/action_garmentDetailsFragment_to_editGarmentFragment"
+            app:destination="@id/newGramentFragment" >
+            <argument
+                android:name="actionType"
+                app:argType="string"
+                app:nullable="false"/>
+            <argument
+                android:name="garment_id"
+                app:argType="string"
+                app:nullable="false"/>
+        </action>
     </fragment>
     <action android:id="@+id/actionGlobal_garmentDetailsFragment" app:destination="@id/garmentDetailsFragment" />
     <fragment
         android:id="@+id/newGramentFragment"
         android:name="com.example.wardrobe.NewGramentFragment"
         android:label="fragment_new_grament"
-        tools:layout="@layout/fragment_new_grament" />
+        tools:layout="@layout/fragment_new_grament" >
+        <argument
+            android:name="actionType"
+            app:argType="string"
+            android:defaultValue="Add" />
+        <argument
+            android:name="garment_id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
     <fragment
         android:id="@+id/friendsFragment"
         android:name="com.example.wardrobe.FriendsListFragment"

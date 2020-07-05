@@ -28,6 +28,7 @@ import com.example.wardrobe.model.entities.Garment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +58,9 @@ public class NewGramentFragment extends Fragment {
     private ImageView imgViewAdd;
     private Button btnAddPhoto;
     private Button btnSave;
+    private String actionType;
+    private String garment_id;
+
     public NewGramentFragment() {
         // Required empty public constructor
     }
@@ -85,12 +89,35 @@ public class NewGramentFragment extends Fragment {
             }
         });
 
+        actionType = NewGramentFragmentArgs.fromBundle(getArguments()).getActionType();
+
+        if(actionType == "Edit"){
+            garment_id = NewGramentFragmentArgs.fromBundle(getArguments()).getGarmentId();
+
+            viewModel.getGarment(garment_id, new GarmentsModel.Listener<Garment>() {
+                @Override
+                public void onComplete(Garment data) {
+                    sizeText.setText(data.getSize());
+                    typeText.setText(data.getType());
+                    colorText.setText(data.getColor());
+                    if (data.getImageUrl() != null && data.getImageUrl() != "") {
+                        Picasso.get().load(data.getImageUrl()).into(imgViewAdd);
+                    }
+
+                    btnSave.setText("Update");
+                }
+
+            });
+        }
+        else {
+            btnSave.setText("Save");
+        }
+
         return v;
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
     }
 
@@ -219,25 +246,30 @@ public class NewGramentFragment extends Fragment {
     }
 
     public void saveGarment() {
-        viewModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
-            @Override
-            public void onSuccess(Object newImageUrl) {
-                btnAddPhoto.setEnabled(false);
-                btnSave.setEnabled(false);
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = auth.getCurrentUser();
-                if(currentUser != null){
-                    String uId = currentUser.getUid();
-                    Garment garment = new Garment(newImageUrl.toString(), uId, NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
-                    viewModel.addNewGarment(garment, new GarmentsModel.CompListener() {
-                        @Override
-                        public void onComplete() {
-                            // Do something
-                        }
-                    });
-                }
+        if (actionType == "Add") {
+            viewModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
+                @Override
+                public void onSuccess(Object newImageUrl) {
+                    btnAddPhoto.setEnabled(false);
+                    btnSave.setEnabled(false);
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    FirebaseUser currentUser = auth.getCurrentUser();
+                    if (currentUser != null) {
+                        String uId = currentUser.getUid();
+                        Garment garment = new Garment(newImageUrl.toString(), uId, NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
+                        viewModel.addNewGarment(garment, new GarmentsModel.CompListener() {
+                            @Override
+                            public void onComplete() {
+                                // Do something
+                            }
+                        });
+                    }
 
-            }
-        });
+                }
+            });
+        } else {
+            // check if image was changed and them update garment
+
+        }
     }
 }
