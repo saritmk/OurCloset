@@ -9,7 +9,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <TextView
-        android:id="@+id/garment_details_size"
+        android:id="@+id/friends_garment_details_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="54dp"
@@ -17,10 +17,10 @@
         android:text="TextView"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/garment_details_color" />
+        app:layout_constraintTop_toBottomOf="@+id/friends_garment_details_color" />
 
     <ImageView
-        android:id="@+id/garment_details_img"
+        android:id="@+id/friends_garment_details_img"
         android:layout_width="135dp"
         android:layout_height="135dp"
         android:layout_marginStart="28dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/garment_details_transaction_button"
+        android:id="@+id/friends_garment_details_transaction_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
@@ -39,10 +39,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.524"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/garment_details_img" />
+        app:layout_constraintTop_toBottomOf="@+id/friends_garment_details_img" />
 
     <TextView
-        android:id="@+id/garment_details_color"
+        android:id="@+id/friends_garment_details_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="46dp"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/friends_textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -61,11 +61,11 @@
         android:text="Size:"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/garment_details_img"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintStart_toEndOf="@+id/friends_garment_details_img"
+        app:layout_constraintTop_toBottomOf="@+id/friends_textView7" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/friends_textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -73,11 +73,11 @@
         android:text="Color:"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/garment_details_img"
+        app:layout_constraintStart_toEndOf="@+id/friends_garment_details_img"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/friends_textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -85,18 +85,18 @@
         android:text="Type:"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/garment_details_img"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintStart_toEndOf="@+id/friends_garment_details_img"
+        app:layout_constraintTop_toBottomOf="@+id/friends_textView6" />
 
     <TextView
-        android:id="@+id/garment_details_Type"
+        android:id="@+id/friends_garment_details_Type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="32dp"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/garment_details_size"
+        app:layout_constraintStart_toEndOf="@+id/friends_textView8"
+        app:layout_constraintTop_toBottomOf="@+id/friends_garment_details_size"
         tools:text="text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

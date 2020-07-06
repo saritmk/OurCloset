@@ -42,6 +42,15 @@ public class FriendsGarmentsListFragment extends Fragment {
     Delegate parent;
 
     public FriendsGarmentsListFragment() {
+//        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
+//            @Override
+//            public void onComplete(List<Garment> _data) {
+//                data = _data;
+//                if(adapter != null) {
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -49,21 +58,19 @@ public class FriendsGarmentsListFragment extends Fragment {
         super.onAttach(context);
 
         viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
-        owner_id = FriendsGarmentsListFragmentArgs.fromBundle(getArguments()).getOwnerId();
-        viewModel.SetOwnerId(owner_id);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view =  inflater.inflate(R.layout.fragment_friends_closet_list, container, false);
-        list = view.findViewById(R.id.friend_closet_list_list);
+        final View view =  inflater.inflate(R.layout.fragment_closet_list, container, false);
+        list = view.findViewById(R.id.closet_list_list);
         list.setHasFixedSize(true);
 
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
-
 
         adapter = new GarmentListAdapter();
         list.setAdapter(adapter);
@@ -74,10 +81,13 @@ public class FriendsGarmentsListFragment extends Fragment {
                 Log.d("TAG","row was clicked" + position);
                 Garment garment = data.get(position);
                 //parent.onItemSelected(garment);
-                NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
+                FriendsGarmentsListFragmentDirections.ActionFriendsGarmentsListFragmentToFriendsGarmentsDetailsFragment direction = FriendsGarmentsListFragmentDirections.actionFriendsGarmentsListFragmentToFriendsGarmentsDetailsFragment(garment);
                 Navigation.findNavController(view).navigate(direction);
             }
         });
+
+        owner_id = FriendsGarmentsListFragmentArgs.fromBundle(getArguments()).getOwnerId();
+        viewModel.SetOwnerId(owner_id);
 
         liveData = viewModel.getData();
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
@@ -88,7 +98,7 @@ public class FriendsGarmentsListFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.friend_closet_list_swipe_refresh);
+        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.closet_list_swipe_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

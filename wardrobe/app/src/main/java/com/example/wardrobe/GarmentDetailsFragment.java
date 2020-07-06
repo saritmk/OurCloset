@@ -36,9 +36,6 @@ public class GarmentDetailsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-
-        // Only Test
-        viewModel.addNewTransaction("1","2","I want this");
     }
 
     @Override
@@ -60,18 +57,16 @@ public class GarmentDetailsFragment extends Fragment {
         EditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToEditGarmentFragment direction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToEditGarmentFragment("Edit",garment.getId());
-                Navigation.findNavController(v).navigate(direction);
+                GarmentDetailsFragment.this.onEditButton();
             }
         });
 
         return view;
     }
 
-    private void onAddEditButton(){
-        // TODO
-        GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToAddTransactionFragment diraction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToAddTransactionFragment(garment);
-        Navigation.findNavController(getView()).navigate(diraction);
+    private void onEditButton(){
+        GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToEditGarmentFragment direction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToEditGarmentFragment("Edit",garment.getId());
+        Navigation.findNavController(getView()).navigate(direction);
     }
 
     private void update_display() {

@@ -45,13 +45,13 @@ public class FriendsGarmentDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_garment_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_friends_garment_details, container, false);
 
-        ColorTextView = view.findViewById(R.id.garment_details_color);
-        SizeTextView = view.findViewById(R.id.garment_details_size);
-        TypeTextView = view.findViewById(R.id.garment_details_Type);
-        ImageView = view.findViewById(R.id.garment_details_img);
-        TransactionButton = view.findViewById(R.id.garment_details_transaction_button);
+        ColorTextView = view.findViewById(R.id.friends_garment_details_color);
+        SizeTextView = view.findViewById(R.id.friends_garment_details_size);
+        TypeTextView = view.findViewById(R.id.friends_garment_details_Type);
+        ImageView = view.findViewById(R.id.friends_garment_details_img);
+        TransactionButton = view.findViewById(R.id.friends_garment_details_transaction_button);
 
         garment = GarmentDetailsFragmentArgs.fromBundle(getArguments()).getGarment();
         if (garment != null){
@@ -68,8 +68,8 @@ public class FriendsGarmentDetailsFragment extends Fragment {
     }
 
     private void onAddTransactionButton(){
-        GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToAddTransactionFragment diraction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToAddTransactionFragment(garment);
-        Navigation.findNavController(getView()).navigate(diraction);
+        FriendsGarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToAddTransactionFragment direction = FriendsGarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToAddTransactionFragment(garment);
+        Navigation.findNavController(getView()).navigate(direction);
     }
 
     private void update_display() {
