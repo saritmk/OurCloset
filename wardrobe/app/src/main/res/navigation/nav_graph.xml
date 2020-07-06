@@ -87,7 +87,11 @@
             app:argType="com.example.wardrobe.model.entities.Garment" />
         <action
             android:id="@+id/action_garmentDetailsFragment_to_addTransactionFragment"
-            app:destination="@id/addTransactionFragment" />
+            app:destination="@id/addTransactionFragment" >
+            <argument
+                android:name="garment"
+                app:argType="com.example.wardrobe.model.entities.Garment" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/transactionListFragment"

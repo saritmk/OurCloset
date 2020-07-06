@@ -12,12 +12,10 @@
         android:id="@+id/friends_garment_details_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="54dp"
-        android:layout_marginTop="32dp"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/friends_garment_details_color" />
+        app:layout_constraintStart_toStartOf="@+id/friends_garment_details_color"
+        app:layout_constraintTop_toTopOf="@+id/friends_textView6" />
 
     <ImageView
         android:id="@+id/friends_garment_details_img"
@@ -45,12 +43,11 @@
         android:id="@+id/friends_garment_details_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="40dp"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/friends_textView7"
+        app:layout_constraintTop_toTopOf="@+id/friends_textView7" />
 
     <TextView
         android:id="@+id/friends_textView6"
@@ -92,11 +89,9 @@
         android:id="@+id/friends_garment_details_Type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="32dp"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/friends_textView8"
-        app:layout_constraintTop_toBottomOf="@+id/friends_garment_details_size"
+        app:layout_constraintStart_toStartOf="@+id/friends_garment_details_color"
+        app:layout_constraintTop_toTopOf="@+id/friends_textView8"
         tools:text="text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

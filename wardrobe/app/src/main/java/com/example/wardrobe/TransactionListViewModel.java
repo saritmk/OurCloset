@@ -41,4 +41,6 @@ public class TransactionListViewModel extends ViewModel {
             TransactionRequestsModel.instance.refreshLentToTransactionsList(user_id,listener);
 
     }
+
+
 }

@@ -25,9 +25,6 @@ public class FriendsGarmentDetailsFragment extends Fragment {
     ImageView ImageView;
     Button TransactionButton;
 
-    // TODO: Delete!! this is a temporery test
-    TransactionViewModel viewModel;
-
     public FriendsGarmentDetailsFragment() {
         // Required empty public constructor
     }
@@ -35,10 +32,6 @@ public class FriendsGarmentDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-
-        // Only Test
-        viewModel.addNewTransaction("1","2","I want this");
     }
 
     @Override
