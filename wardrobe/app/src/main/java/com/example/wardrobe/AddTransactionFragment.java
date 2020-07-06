@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 
 public class AddTransactionFragment extends Fragment {
+    String defaultRequestText = "Hey! I really like this item, can I borrow it please?";
     Garment garment;
     String garment_owner_id;
     String current_user_id;
@@ -77,8 +78,13 @@ public class AddTransactionFragment extends Fragment {
     }
 
     private void onSubmitTransaction(){
+        String requestTextString = requestText.getText().toString();
         if(garment != null && garment_owner_id != "" && current_user_id != ""){
-            viewModel.addNewTransaction(garment.getId(), garment_owner_id, requestText.getText().toString(), new TransactionRequestsModel.Listener<Boolean>() {
+            if (requestTextString.equals("")) {
+                requestTextString = this.defaultRequestText;
+            }
+
+            viewModel.addNewTransaction(garment.getId(), garment_owner_id, requestTextString, new TransactionRequestsModel.Listener<Boolean>() {
                 @Override
                 public void onComplete(Boolean data) {
                     submitTransactionBtn.setEnabled(false);

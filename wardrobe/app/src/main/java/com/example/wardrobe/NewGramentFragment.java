@@ -91,7 +91,7 @@ public class NewGramentFragment extends Fragment {
 
         actionType = NewGramentFragmentArgs.fromBundle(getArguments()).getActionType();
 
-        if(actionType == "Edit"){
+        if(actionType.equals("Edit")){
             garment_id = NewGramentFragmentArgs.fromBundle(getArguments()).getGarmentId();
 
             viewModel.getGarment(garment_id, new GarmentsModel.Listener<Garment>() {
@@ -246,7 +246,7 @@ public class NewGramentFragment extends Fragment {
     }
 
     public void saveGarment() {
-        if (actionType == "Add") {
+        if (actionType.equals("Add")) {
             viewModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
                 @Override
                 public void onSuccess(Object newImageUrl) {
