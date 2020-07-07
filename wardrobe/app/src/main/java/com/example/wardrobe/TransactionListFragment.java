@@ -29,13 +29,14 @@ import java.util.List;
 
 public class TransactionListFragment extends Fragment {
     RecyclerView list;
-    boolean isBorrowedFromMe;
+    boolean isBorrowedFromMe = true;
     List<TransactionRequest> borrowedData = new LinkedList<TransactionRequest>();
     List<TransactionRequest> lentData = new LinkedList<TransactionRequest>();
     List<TransactionRequest> data = new LinkedList<>();
     TransactionListAdapter adapter;
     TransactionListViewModel viewModel;
-    LiveData<List<TransactionRequest>> liveData;
+    LiveData<List<TransactionRequest>> liveDataBorrowed;
+    LiveData<List<TransactionRequest>> liveDataLent;
     Button LentButton;
     Button BorrowedButton;
 
@@ -95,19 +96,28 @@ public class TransactionListFragment extends Fragment {
         LentButton = view.findViewById(R.id.button_lent);
 
         BorrowedButton = view.findViewById(R.id.button_borewed);
-
-        liveData = viewModel.getData();
-        liveData.observe(getViewLifecycleOwner(), new Observer<List<TransactionRequest>>() {
+        viewModel.SetBorrowedFromMe(isBorrowedFromMe);
+        liveDataBorrowed = viewModel.getBorrowedData();
+        liveDataBorrowed.observe(getViewLifecycleOwner(), new Observer<List<TransactionRequest>>() {
             @Override
             public void onChanged(List<TransactionRequest> transactionRequests) {
+                borrowedData = transactionRequests;
                 if(isBorrowedFromMe){
-                    borrowedData = transactionRequests;
+                    data = transactionRequests;
+                    adapter.notifyDataSetChanged();
                 }
-                else{
-                    lentData = transactionRequests;
-                }
+            }
+        });
 
-                adapter.notifyDataSetChanged();
+        liveDataLent = viewModel.getLentData();
+        liveDataLent.observe(getViewLifecycleOwner(), new Observer<List<TransactionRequest>>() {
+            @Override
+            public void onChanged(List<TransactionRequest> transactionRequests) {
+                lentData = transactionRequests;
+                if(!isBorrowedFromMe){
+                    data = transactionRequests;
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -144,26 +154,31 @@ public class TransactionListFragment extends Fragment {
 
     private void onLentToMeButtonClick(View view){
         data = lentData;
+        adapter.notifyDataSetChanged();
+        isBorrowedFromMe = false;
         viewModel.SetBorrowedFromMe(false);
-        liveData = viewModel.getData();
+        //liveData = viewModel.getData();
 
-        viewModel.refresh(new TransactionRequestsModel.CompListener() {
-            @Override
-            public void onComplete() {
-                liveData = viewModel.getData();
-            }
-        });
+//        viewModel.refresh(new TransactionRequestsModel.CompListener() {
+//            @Override
+//            public void onComplete() {
+//                liveData = viewModel.getData();
+//            }
+//        });
     }
 
     private void onBorrwedFromMeButtonClick(View view){
         data = borrowedData;
+        adapter.notifyDataSetChanged();
+        isBorrowedFromMe = true;
         viewModel.SetBorrowedFromMe(true);
-        viewModel.refresh(new TransactionRequestsModel.CompListener() {
-            @Override
-            public void onComplete() {
-                liveData = viewModel.getData();
-            }
-        });    }
+//        viewModel.refresh(new TransactionRequestsModel.CompListener() {
+//            @Override
+//            public void onComplete() {
+//                liveData = viewModel.getData();
+//            }
+//        });
+    }
 
     static class TransactionItemViewHolder extends RecyclerView.ViewHolder{
         TextView id;
