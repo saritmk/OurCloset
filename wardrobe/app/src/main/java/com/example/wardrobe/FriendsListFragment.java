@@ -3,6 +3,7 @@ package com.example.wardrobe;
 import android.app.Notification;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.BoringLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.wardrobe.model.UsersModel;
 import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -36,6 +39,7 @@ public class FriendsListFragment extends Fragment {
     FriendListAdapter adapter;
     UsersViewModel viewModel;
     LiveData<List<User>> liveData;
+    String currentUserId="";
 
     interface Delegate{
         void onItemSelected(User friend);
@@ -71,6 +75,12 @@ public class FriendsListFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
 
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currUser = auth.getCurrentUser();
+        if(currUser != null){
+            currentUserId = currUser.getUid();
+        }
+
         adapter = new FriendListAdapter();
         list.setAdapter(adapter);
 
@@ -87,7 +97,8 @@ public class FriendsListFragment extends Fragment {
         liveData = viewModel.getData();
         liveData.observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @Override
-            public void onChanged(List<User> friends) {
+            public void onChanged(List<User> users) {
+                List<User> friends = removeOwnUserFromFriendsList(users);
                 data = friends;
                 adapter.notifyDataSetChanged();
             }
@@ -107,6 +118,22 @@ public class FriendsListFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private List<User> removeOwnUserFromFriendsList(List<User> allUsers){
+        User ownUser = null;
+        List<User> friends = allUsers;
+
+        for (User currUser : allUsers) {
+            if (currUser.getUser_id().equals(this.currentUserId)) {
+                ownUser = currUser;
+                break;
+            }
+        }
+
+        friends.remove(ownUser);
+
+        return friends;
     }
 
 
@@ -178,5 +205,7 @@ public class FriendsListFragment extends Fragment {
         public int getItemCount() {
             return data.size();
         }
+
+
     }
 }
