@@ -60,6 +60,7 @@ public class NewGramentFragment extends Fragment {
     private Button btnSave;
     private String actionType;
     private String garment_id;
+    private Garment garmentToEdit;
 
     public NewGramentFragment() {
         // Required empty public constructor
@@ -97,6 +98,7 @@ public class NewGramentFragment extends Fragment {
             viewModel.getGarment(garment_id, new GarmentsModel.Listener<Garment>() {
                 @Override
                 public void onComplete(Garment data) {
+                    garmentToEdit = data;
                     sizeText.setText(data.getSize());
                     typeText.setText(data.getType());
                     colorText.setText(data.getColor());
@@ -246,30 +248,30 @@ public class NewGramentFragment extends Fragment {
     }
 
     public void saveGarment() {
-        if (actionType.equals("Add")) {
-            viewModel.saveImage(tempFile, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
-                @Override
-                public void onSuccess(Object newImageUrl) {
-                    btnAddPhoto.setEnabled(false);
-                    btnSave.setEnabled(false);
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    FirebaseUser currentUser = auth.getCurrentUser();
-                    if (currentUser != null) {
-                        String uId = currentUser.getUid();
-                        Garment garment = new Garment(newImageUrl.toString(), uId, NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
-                        viewModel.addNewGarment(garment, new GarmentsModel.CompListener() {
-                            @Override
-                            public void onComplete() {
-                                // Do something
-                            }
-                        });
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        btnAddPhoto.setEnabled(false);
+        btnSave.setEnabled(false);
+        if (currentUser != null) {
+            String uId = currentUser.getUid();
+
+            if (actionType.equals("Add")) {
+                Garment garment = new Garment(null, uId, NewGramentFragment.this.typeText.getText().toString(), NewGramentFragment.this.colorText.getText().toString(), NewGramentFragment.this.sizeText.getText().toString());
+                viewModel.addNewGarment(garment, tempFile, new GarmentsModel.CompListener() {
+                    @Override
+                    public void onComplete() {
+                        // Do something
                     }
+                });
+            } else {
+                viewModel.updateGarment(this.garmentToEdit, tempFile, typeText.getText().toString(), sizeText.getText().toString(), colorText.getText().toString(), new GarmentsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean data) {
+                        // Do somthing
+                    }
+                });
 
-                }
-            });
-        } else {
-            // check if image was changed and them update garment
-
+            }
         }
     }
 }

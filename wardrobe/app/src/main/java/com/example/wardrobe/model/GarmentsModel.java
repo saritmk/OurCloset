@@ -12,12 +12,16 @@ import com.example.wardrobe.model.firebase.GarmentsFirebase;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
 public class GarmentsModel {
     public interface Listener<T>{
@@ -65,13 +69,65 @@ public class GarmentsModel {
         return garment;
     }
 
-    public void addNewGarment(Garment garment, Listener<Boolean> listener){
-        GarmentsFirebase.addGarment(garment, listener);
-        //AppLocalDb.db.garmentDao().insertAll(garment);
+    public void addNewGarment(final Garment garment, File image, final CompListener listener){
+        if(image!=null) {
+            GarmentsFirebase.saveImage(image, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
+                @Override
+                public void onSuccess(Object imgUrl) {
+                    garment.setImageUrl(imgUrl.toString());
+                    GarmentsFirebase.addGarment(garment, new Listener<Boolean>() {
+                        @Override
+                        public void onComplete(Boolean data) {
+                            if (data) {
+                                listener.onComplete();
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
 
-    public void update(Garment garment, Listener<Boolean> listener){
-        GarmentsFirebase.updateGarment(garment,listener);
+    public void updateGarment(final String garmentId,
+                       final String owner_id,
+                       final String oldImageUrl,
+                       final File newImage,
+                       final String type,
+                       final String size,
+                       final String color,
+                       final Listener<Boolean> listener) {
+        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                String oldImageUri = oldImageUrl;
+                final Garment updateGarment = new Garment();
+                updateGarment.setId(garmentId);
+                updateGarment.setOwner_id(owner_id);
+                updateGarment.setColor(color);
+                updateGarment.setSize(size);
+                updateGarment.setType(type);
+                if (newImage == null) {
+                    updateGarment.setImageUrl(oldImageUri);
+                    GarmentsFirebase.updateGarment(updateGarment,listener);
+                } else {
+                    GarmentsFirebase.deleteImage(oldImageUri, new OnSuccessListener<Object>() {
+                        @Override
+                        public void onSuccess(Object o) {
+                            GarmentsFirebase.saveImage(newImage, UUID.randomUUID().toString(), new OnSuccessListener<Object>() {
+                                @Override
+                                public void onSuccess(Object imgUrl) {
+                                    updateGarment.setImageUrl(imgUrl.toString());
+                                    GarmentsFirebase.updateGarment(updateGarment,listener);
+                                }
+                            });
+                        }
+                    });
+                }
+
+
+                return null;
+            }
+        });
     }
 
     public void delete(final Garment garment, final Listener<Boolean> listener){
@@ -87,29 +143,7 @@ public class GarmentsModel {
     }
 
 
-    public static void saveImage(File image, String uid, final OnSuccessListener<Object> listener) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        final StorageReference imageRef = storage.getReference().child("images").child(uid);
-        Uri fileUri = Uri.fromFile(image);
-
-        UploadTask uploadTask = imageRef.putFile(fileUri);
-        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    Exception e = task.getException();
-                    Log.e("CHANGE IT", e.toString());
-                }
-                return imageRef.getDownloadUrl();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<Object>() {
-            @Override
-            public void onSuccess(Object task) {
-                listener.onSuccess(task);
-            }
-        });
-    }
 
 
 

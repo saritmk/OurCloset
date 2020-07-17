@@ -1,5 +1,7 @@
 package com.example.wardrobe;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -34,14 +36,16 @@ public class GarmentsViewModel extends ViewModel {
         listener.onComplete(garment);
     }
 
-    public void addNewGarment(Garment newGarment, GarmentsModel.CompListener listener){
-        GarmentsModel.instance.addNewGarment(newGarment,null);
-    }
-    public void saveImage(File image, String Uid, OnSuccessListener listener){
-        GarmentsModel.saveImage(image,Uid,listener);
+    public void addNewGarment(Garment newGarment, File image, GarmentsModel.CompListener listener){
+        GarmentsModel.instance.addNewGarment(newGarment, image, listener);
     }
 
-    public void updateGarment(Garment garmentToUpdate, GarmentsModel.Listener<Boolean> listener){
-        GarmentsModel.instance.update(garmentToUpdate,listener);
+    public void updateGarment(Garment currGarment,
+                              File newImg,
+                              String newType,
+                              String newSize,
+                              String newColor,
+                              GarmentsModel.Listener<Boolean> listener){
+        GarmentsModel.instance.updateGarment(currGarment.getId(), currGarment.getOwner_id(), currGarment.getImageUrl(), newImg, newType, newSize, newColor, listener);
     }
 }
