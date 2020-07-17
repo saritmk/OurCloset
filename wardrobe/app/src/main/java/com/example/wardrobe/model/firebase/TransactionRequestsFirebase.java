@@ -109,10 +109,13 @@ public class TransactionRequestsFirebase {
     private static Map<String, Object> toJson(TransactionRequest transaction){
         HashMap<String, Object> result = new HashMap<>();
         result.put("borrow_user_id", transaction.getBorrow_user_id());
+        result.put("borrow_user_name", transaction.getBorrow_user_name());
         result.put("transaction_id", transaction.getTransaction_id());
         result.put("lend_user_id", transaction.getLend_user_id());
+        result.put("lend_user_name", transaction.getLend_user_name());
         result.put("request_text", transaction.getRequest_text());
         result.put("status", transaction.getStatus());
+        result.put("imgUrl",transaction.getImgUrl());
         result.put("garment_id",transaction.getGarment_id());
         return result;
     }

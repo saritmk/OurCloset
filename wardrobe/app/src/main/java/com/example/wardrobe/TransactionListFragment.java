@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.example.wardrobe.model.TransactionRequestsModel;
 import com.example.wardrobe.model.entities.TransactionRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -80,6 +83,7 @@ public class TransactionListFragment extends Fragment {
         list.setLayoutManager(layoutManager);
 
         adapter = new TransactionListAdapter();
+        adapter.SetBorrowedFromMe(isBorrowedFromMe);
         list.setAdapter(adapter);
 
         adapter.setOnIntemClickListener(new OnItemClickListener() {
@@ -154,6 +158,7 @@ public class TransactionListFragment extends Fragment {
 
     private void onLentToMeButtonClick(View view){
         data = lentData;
+        adapter.SetBorrowedFromMe(false);
         adapter.notifyDataSetChanged();
         isBorrowedFromMe = false;
         viewModel.SetBorrowedFromMe(false);
@@ -169,6 +174,7 @@ public class TransactionListFragment extends Fragment {
 
     private void onBorrwedFromMeButtonClick(View view){
         data = borrowedData;
+        adapter.SetBorrowedFromMe(true);
         adapter.notifyDataSetChanged();
         isBorrowedFromMe = true;
         viewModel.SetBorrowedFromMe(true);
@@ -181,12 +187,22 @@ public class TransactionListFragment extends Fragment {
     }
 
     static class TransactionItemViewHolder extends RecyclerView.ViewHolder{
-        TextView id;
+        ImageView imgView;
+        TextView otherUserName;
+        TextView status;
+        EditText requestText;
         TransactionRequest transactionRequest;
+        Boolean isBorrowedFromMe;
+        TextView fromTo;
 
-        public TransactionItemViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+        public TransactionItemViewHolder(@NonNull View itemView,Boolean isBorrowedFromMe, final OnItemClickListener listener) {
             super(itemView);
-            id = itemView.findViewById(R.id.transaction_item_id);
+            imgView = itemView.findViewById(R.id.transaction_garment_iv);
+            status = itemView.findViewById(R.id.transaction_status_tv);
+            requestText = itemView.findViewById(R.id.request_text_transaction_tv);
+            otherUserName = itemView.findViewById(R.id.other_user_transaction_tv);
+            fromTo = itemView.findViewById(R.id.from_to_transaction_tv);
+            this.isBorrowedFromMe = isBorrowedFromMe;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -200,11 +216,24 @@ public class TransactionListFragment extends Fragment {
                 }
             });
         }
-
+        void SetBorrowedFromMe(Boolean isBorrowedFromMe){
+            this.isBorrowedFromMe = isBorrowedFromMe;
+        }
         public void bind(TransactionRequest tr) {
             transactionRequest = tr;
-            id.setText(transactionRequest.getTransaction_id());
-
+            status.setText(transactionRequest.getStatus());
+            requestText.setText(transactionRequest.getRequest_text());
+            if(isBorrowedFromMe){
+                fromTo.setText("to:");
+                otherUserName.setText(transactionRequest.getBorrow_user_name());
+            }
+            else {
+                fromTo.setText("from:");
+                otherUserName.setText((transactionRequest.getLend_user_name()));
+            }
+            if (tr.getImgUrl() != null && tr.getImgUrl() != "") {
+                Picasso.get().load(tr.getImgUrl()).into(imgView);
+            }
         }
     }
 
@@ -214,22 +243,26 @@ public class TransactionListFragment extends Fragment {
 
     class TransactionListAdapter extends RecyclerView.Adapter<TransactionItemViewHolder>{
         private OnItemClickListener listener;
+        Boolean isBorrowedFromMe = true;
 
         void setOnIntemClickListener(OnItemClickListener listener){
             this.listener = listener;
         }
-
+        void SetBorrowedFromMe(Boolean isBorrowedFromMe){
+            this.isBorrowedFromMe = isBorrowedFromMe;
+        }
         @NonNull
         @Override
         public TransactionItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(getActivity()).inflate(R.layout.transaction_item, viewGroup,false );
-            TransactionItemViewHolder vh = new TransactionItemViewHolder(v, listener);
+            TransactionItemViewHolder vh = new TransactionItemViewHolder(v,isBorrowedFromMe, listener);
             return vh;
         }
 
         @Override
         public void onBindViewHolder(@NonNull TransactionItemViewHolder holder, int position) {
             TransactionRequest tr = data.get(position);
+            holder.SetBorrowedFromMe(isBorrowedFromMe);
             holder.bind(tr);
         }
 

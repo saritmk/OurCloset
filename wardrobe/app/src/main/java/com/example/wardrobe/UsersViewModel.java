@@ -20,6 +20,10 @@ public class UsersViewModel extends ViewModel {
         return liveData;
     }
 
+    public void getUser(String user_id, UsersModel.Listener<User> listener){
+        UsersModel.instance.getUser(user_id, listener);
+    }
+
     public void refresh(UsersModel.CompListener listener) {
         UsersModel.instance.refreshUsersList(listener);
     }

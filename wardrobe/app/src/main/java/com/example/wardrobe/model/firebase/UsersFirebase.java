@@ -8,6 +8,7 @@ import com.example.wardrobe.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,7 +40,20 @@ public class UsersFirebase {
             }
         });
     }
-
+    public static void getUser(String uId, final UsersModel.Listener<User> listener){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(USERS_COLLECTION).document(uId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        listener.onComplete(document.toObject(User.class));
+                    }
+                }
+            }
+        });
+    }
     public static void addUser(User userToAdd, final UsersModel.Listener<Boolean> listener){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(USERS_COLLECTION).document(userToAdd.getUser_id()).set(toJson(userToAdd)).addOnCompleteListener(new OnCompleteListener() {

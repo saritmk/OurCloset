@@ -4,16 +4,14 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.User;
-import com.example.wardrobe.model.firebase.GarmentsFirebase;
 import com.example.wardrobe.model.firebase.UsersFirebase;
 
 import java.util.List;
 
 public class UsersModel {
     public interface Listener<T>{
-        void onComplete(T data);
+        User onComplete(T data);
     }
     public interface CompListener{
         void onComplete();
@@ -26,7 +24,7 @@ public class UsersModel {
     public void refreshUsersList(final CompListener listener){
         UsersFirebase.getAllUsersList(new Listener<List<User>>() {
             @Override
-            public void onComplete(final List<User> usersList) {
+            public User onComplete(final List<User> usersList) {
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
@@ -41,6 +39,7 @@ public class UsersModel {
                         if (listener!=null)  listener.onComplete();
                     }
                 }.execute("");
+                return null;
             }
         });
     }
@@ -51,17 +50,20 @@ public class UsersModel {
         return liveData;
     }
 
-
+    public void getUser(String uId, Listener<User> listener){
+        UsersFirebase.getUser(uId, listener);
+    }
 
     public void addUser(final User user, final Listener<Boolean> listener){
         UsersFirebase.addUser(user, new Listener<Boolean>() {
             @Override
-            public void onComplete(Boolean data) {
+            public User onComplete(Boolean data) {
                 if(data){
                     AppLocalDb.db.usersDao().insertAll(user);
                     if(listener!=null)
                         listener.onComplete(true);
                 }
+                return null;
             }
         });
     }

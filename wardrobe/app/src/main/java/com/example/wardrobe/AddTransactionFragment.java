@@ -14,7 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.wardrobe.model.TransactionRequestsModel;
+import com.example.wardrobe.model.UsersModel;
 import com.example.wardrobe.model.entities.Garment;
+import com.example.wardrobe.model.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -24,7 +26,9 @@ public class AddTransactionFragment extends Fragment {
     String defaultRequestText = "Hey! I really like this item, can I borrow it please?";
     Garment garment;
     String garment_owner_id;
+    String garment_owner_name;
     String current_user_id;
+    String current_user_name;
     ImageView garmentImg;
     TextView color;
     TextView type;
@@ -32,6 +36,7 @@ public class AddTransactionFragment extends Fragment {
     EditText requestText;
     Button submitTransactionBtn;
     TransactionViewModel viewModel;
+    UsersViewModel usersViewModel;
 
     public AddTransactionFragment() {
     }
@@ -40,6 +45,7 @@ public class AddTransactionFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
     }
 
     @Override
@@ -57,6 +63,14 @@ public class AddTransactionFragment extends Fragment {
         garment = AddTransactionFragmentArgs.fromBundle(getArguments()).getGarment();
         if (garment != null){
             garment_owner_id = garment.getOwner_id();
+            usersViewModel.getUser(garment_owner_id, new UsersModel.Listener<User>() {
+                @Override
+                public User onComplete(User data) {
+                    garment_owner_name = data.getName();
+                    return null;
+                }
+            });
+
             update_display();
         }
 
@@ -64,6 +78,7 @@ public class AddTransactionFragment extends Fragment {
         FirebaseUser currUser = auth.getCurrentUser();
         if(currUser!=null){
             current_user_id = currUser.getUid();
+            current_user_name = currUser.getDisplayName();
             viewModel.setCurrentUserId(current_user_id);
         }
 
@@ -84,7 +99,7 @@ public class AddTransactionFragment extends Fragment {
                 requestTextString = this.defaultRequestText;
             }
 
-            viewModel.addNewTransaction(garment.getId(), garment_owner_id, requestTextString, new TransactionRequestsModel.Listener<Boolean>() {
+            viewModel.addNewTransaction(garment.getId(), garment_owner_id, garment_owner_name, current_user_name, garment.getImageUrl(), requestTextString, new TransactionRequestsModel.Listener<Boolean>() {
                 @Override
                 public void onComplete(Boolean data) {
                     submitTransactionBtn.setEnabled(false);

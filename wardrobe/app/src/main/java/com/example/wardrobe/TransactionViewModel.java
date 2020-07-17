@@ -12,12 +12,15 @@ public class TransactionViewModel extends ViewModel {
         this.curr_user_id = currUserId;
     }
 
-    public void addNewTransaction(String garment_id, String owner_id, String requestText, final TransactionRequestsModel.Listener<Boolean> listener){
+    public void addNewTransaction(String garment_id, String owner_id, String garment_owner_name, String current_user_name, String garmentImageUrl, String requestText, final TransactionRequestsModel.Listener<Boolean> listener){
         TransactionRequest transaction = new TransactionRequest();
         transaction.setBorrow_user_id(curr_user_id);
+        transaction.setBorrow_user_name(current_user_name);
         transaction.setLend_user_id(owner_id);
+        transaction.setLend_user_name(garment_owner_name);
         transaction.setRequest_text(requestText);
         transaction.setStatus("Requested");
+        transaction.setImgUrl(garmentImageUrl);
         transaction.setGarment_id(garment_id);
 
         TransactionRequestsModel.instance.addNewTransaction(transaction, new TransactionRequestsModel.Listener<Boolean>() {
