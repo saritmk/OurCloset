@@ -29,7 +29,9 @@ public class TransactionRequestsFirebase {
                     transactionsData = new LinkedList<TransactionRequest>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         TransactionRequest transactionRequest = doc.toObject(TransactionRequest.class);
-                        transactionsData.add(transactionRequest);
+                        if(transactionRequest.getTransaction_id()!=null){
+                            transactionsData.add(transactionRequest);
+                        }
                     }
                 }
                 listener.onComplete(transactionsData);
@@ -47,7 +49,9 @@ public class TransactionRequestsFirebase {
                     transactionsData = new LinkedList<TransactionRequest>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         TransactionRequest transactionRequest = doc.toObject(TransactionRequest.class);
-                        transactionsData.add(transactionRequest);
+                        if(transactionRequest.getTransaction_id()!=null) {
+                            transactionsData.add(transactionRequest);
+                        }
                     }
                 }
                 listener.onComplete(transactionsData);

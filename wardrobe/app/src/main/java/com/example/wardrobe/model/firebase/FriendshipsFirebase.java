@@ -28,7 +28,9 @@ public class FriendshipsFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Friendship friendship = doc.toObject(Friendship.class);
-                        friendshipsData.add(friendship);
+                        if(friendship.getFriendship_id()!=null) {
+                            friendshipsData.add(friendship);
+                        }
                     }
                 }
 

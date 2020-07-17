@@ -29,7 +29,9 @@ public class GarmentsFirebase {
                     garmentsData = new LinkedList<Garment>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         Garment garment = doc.toObject(Garment.class);
-                        garmentsData.add(garment);
+                        if(garment.getId()!=null) {
+                            garmentsData.add(garment);
+                        }
                     }
                 }
                 listener.onComplete(garmentsData);

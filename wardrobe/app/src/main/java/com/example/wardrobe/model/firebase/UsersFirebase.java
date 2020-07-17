@@ -30,7 +30,9 @@ public class UsersFirebase {
                     usersData = new LinkedList<User>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         User user = doc.toObject(User.class);
-                        usersData.add(user);
+                        if(user.getUser_id()!=null) {
+                            usersData.add(user);
+                        }
                     }
                 }
                 listener.onComplete(usersData);
