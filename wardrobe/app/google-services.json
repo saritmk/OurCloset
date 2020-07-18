@@ -1,4 +1,4 @@
-{
+﻿{
   "project_info": {
     "project_number": "867328283904",
     "firebase_url": "https://wardrobe-c1a39.firebaseio.com",
@@ -17,6 +17,10 @@
         {
           "client_id": "867328283904-fclbmb6e9mejmh4lg394d89361qcemhv.apps.googleusercontent.com",
           "client_type": 3
+        },
+        {
+          "client_id": "867328283904-q1ouinv1k9a1ice4hpf485beqfivl78k.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -29,6 +33,10 @@
           "other_platform_oauth_client": [
             {
               "client_id": "867328283904-fclbmb6e9mejmh4lg394d89361qcemhv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "867328283904-q1ouinv1k9a1ice4hpf485beqfivl78k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

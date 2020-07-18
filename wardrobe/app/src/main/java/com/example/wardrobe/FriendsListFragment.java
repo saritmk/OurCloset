@@ -1,9 +1,7 @@
 package com.example.wardrobe;
 
-import android.app.Notification;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.UsersModel;
-import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -72,7 +69,7 @@ public class FriendsListFragment extends Fragment {
         list = view.findViewById(R.id.friends_list_list);
         list.setHasFixedSize(true);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),1);
         list.setLayoutManager(layoutManager);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
