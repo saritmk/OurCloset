@@ -104,25 +104,45 @@ public class TransactionListFragment extends Fragment {
             @Override
             public void onApproveClick(int position) {
                 TransactionRequest transactionRequest = data.get(position);
-                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(), "Approved");
+                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(), "Approved", new TransactionRequestsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean data) {
+                        viewModel.refresh(null);
+                    }
+                });
             }
 
             @Override
             public void onRejectClick(int position) {
                 TransactionRequest transactionRequest = data.get(position);
-                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(),"rejected");
+                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(), "rejected", new TransactionRequestsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean data) {
+                        viewModel.refresh(null);
+                    }
+                });
             }
 
             @Override
             public void onCancelClick(int position) {
                 TransactionRequest transactionRequest = data.get(position);
-                viewModelTransactionItem.deleteTransaction(transactionRequest);
+                viewModelTransactionItem.deleteTransaction(transactionRequest, new TransactionRequestsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean data) {
+                        viewModel.refresh(null);
+                    }
+                });
             }
 
             @Override
             public void onReturnClick(int position) {
                 TransactionRequest transactionRequest = data.get(position);
-                viewModelTransactionItem.deleteTransaction(transactionRequest);
+                viewModelTransactionItem.deleteTransaction(transactionRequest, new TransactionRequestsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean data) {
+                        viewModel.refresh(null);
+                    }
+                });
             }
         });
 
