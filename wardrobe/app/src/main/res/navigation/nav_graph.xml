@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/closetListFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/closetListFragment"
         android:name="com.example.wardrobe.GarmentsListFragment"
@@ -32,7 +32,9 @@
         </action>
         <action
             android:id="@+id/action_garmentDetailsFragment_to_closetListFragment"
-            app:destination="@id/closetListFragment" />
+            app:destination="@id/closetListFragment"
+            app:enterAnim="@anim/fragment_fade_enter" />
+
     </fragment>
     <action android:id="@+id/actionGlobal_garmentDetailsFragment" app:destination="@id/garmentDetailsFragment" />
     <fragment

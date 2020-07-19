@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.wardrobe.model.GarmentsModel;
@@ -84,10 +85,11 @@ public class GarmentDetailsFragment extends Fragment {
             public void onComplete(Boolean x) {
                 if (x){
                     Toast.makeText(getActivity(), "deleted", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
+                    navController.navigate(R.id.action_garmentDetailsFragment_to_closetListFragment);
                 }
             }
         });
-
     }
     private void update_display() {
         ColorTextView.setText(garment.getColor());
