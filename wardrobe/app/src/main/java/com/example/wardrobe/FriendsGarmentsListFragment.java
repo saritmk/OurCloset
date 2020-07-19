@@ -120,6 +120,9 @@ public class FriendsGarmentsListFragment extends Fragment {
                 if(garments.isEmpty()) {
                     emptyTextView.setVisibility(View.VISIBLE);
                 }
+                else {
+                    emptyTextView.setVisibility(View.GONE);
+                }
                 data = garments;
                 adapter.notifyDataSetChanged();
             }

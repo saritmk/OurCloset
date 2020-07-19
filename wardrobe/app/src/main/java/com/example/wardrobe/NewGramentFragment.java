@@ -87,7 +87,7 @@ public class NewGramentFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vi) {
-                NewGramentFragment.this.saveGarment();
+                if (validatetext() && validatePicture())NewGramentFragment.this.saveGarment();
             }
         });
 
@@ -276,5 +276,29 @@ public class NewGramentFragment extends Fragment {
 
             }
         }
+    }
+
+    public boolean validatetext() {
+        if (sizeText.getText().toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must fill size", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (colorText.getText().toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must fill color", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (typeText.getText().toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must fill type", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePicture(){
+        if (tempFile == null || tempFile.toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must upload picture", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 }
