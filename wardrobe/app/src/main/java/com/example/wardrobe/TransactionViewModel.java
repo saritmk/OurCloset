@@ -32,6 +32,10 @@ public class TransactionViewModel extends ViewModel {
     }
 
     public void updateTransactionStatus(String transactionId, String newStatus){
+        TransactionRequestsModel.instance.updateTransactionStatus(transactionId,newStatus, null);
+    }
 
+    public void deleteTransaction(TransactionRequest transaction){
+        TransactionRequestsModel.instance.deleteTransaction(transaction,null);
     }
 }

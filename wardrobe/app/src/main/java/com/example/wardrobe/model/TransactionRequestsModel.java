@@ -82,7 +82,9 @@ public class TransactionRequestsModel {
             public void onComplete(Boolean data) {
                 if(data) {
                     AppLocalDb.db.transactionDao().delete(transactionRequest);
-                    listener.onComplete(true);
+                    if(listener!=null){
+                        listener.onComplete(true);
+                    }
                 }
             }
         });

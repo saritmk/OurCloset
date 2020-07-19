@@ -38,6 +38,7 @@ public class TransactionListFragment extends Fragment {
     List<TransactionRequest> data = new LinkedList<>();
     TransactionListAdapter adapter;
     TransactionListViewModel viewModel;
+    TransactionViewModel viewModelTransactionItem;
     LiveData<List<TransactionRequest>> liveDataBorrowed;
     LiveData<List<TransactionRequest>> liveDataLent;
     Button LentButton;
@@ -62,6 +63,7 @@ public class TransactionListFragment extends Fragment {
         }
 
         viewModel = new ViewModelProvider(this).get(TransactionListViewModel.class);
+        viewModelTransactionItem = new ViewModelProvider(this).get(TransactionViewModel.class);
     }
 
     @Override
@@ -94,6 +96,30 @@ public class TransactionListFragment extends Fragment {
                 //parent.onItemSelected(garment);
                 //NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
                 //Navigation.findNavController(view).navigate(direction);
+            }
+
+            @Override
+            public void onApproveClick(int position) {
+                TransactionRequest transactionRequest = data.get(position);
+                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(), "Approved");
+            }
+
+            @Override
+            public void onRejectClick(int position) {
+                TransactionRequest transactionRequest = data.get(position);
+                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(),"rejected");
+            }
+
+            @Override
+            public void onCancelClick(int position) {
+                TransactionRequest transactionRequest = data.get(position);
+                viewModelTransactionItem.deleteTransaction(transactionRequest);
+            }
+
+            @Override
+            public void onReturnClick(int position) {
+                TransactionRequest transactionRequest = data.get(position);
+                viewModelTransactionItem.deleteTransaction(transactionRequest);
             }
         });
 
@@ -178,12 +204,6 @@ public class TransactionListFragment extends Fragment {
         adapter.notifyDataSetChanged();
         isBorrowedFromMe = true;
         viewModel.SetBorrowedFromMe(true);
-//        viewModel.refresh(new TransactionRequestsModel.CompListener() {
-//            @Override
-//            public void onComplete() {
-//                liveData = viewModel.getData();
-//            }
-//        });
     }
 
     static class TransactionItemViewHolder extends RecyclerView.ViewHolder{
@@ -194,8 +214,12 @@ public class TransactionListFragment extends Fragment {
         TransactionRequest transactionRequest;
         Boolean isBorrowedFromMe;
         TextView fromTo;
+        Button approveTransaction;
+        Button rejectTransaction;
+        Button cancelTransaction;
+        Button returnedTransaction;
 
-        public TransactionItemViewHolder(@NonNull View itemView,Boolean isBorrowedFromMe, final OnItemClickListener listener) {
+        public TransactionItemViewHolder(@NonNull View itemView, Boolean isBorrowedFromMe, final OnItemClickListener listener) {
             super(itemView);
             imgView = itemView.findViewById(R.id.transaction_garment_iv);
             status = itemView.findViewById(R.id.transaction_status_tv);
@@ -203,6 +227,10 @@ public class TransactionListFragment extends Fragment {
             otherUserName = itemView.findViewById(R.id.other_user_transaction_tv);
             fromTo = itemView.findViewById(R.id.from_to_transaction_tv);
             this.isBorrowedFromMe = isBorrowedFromMe;
+            approveTransaction = itemView.findViewById(R.id.approve_transaction_btn);
+            rejectTransaction = itemView.findViewById(R.id.reject_transaction_btn);
+            cancelTransaction = itemView.findViewById(R.id.cancel_request_btn);
+            returnedTransaction = itemView.findViewById(R.id.returned_request_btn);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -215,6 +243,54 @@ public class TransactionListFragment extends Fragment {
                     }
                 }
             });
+
+            approveTransaction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onApproveClick(position);
+                        }
+                    }
+                }
+            });
+
+            rejectTransaction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onRejectClick(position);
+                        }
+                    }
+                }
+            });
+
+            cancelTransaction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onCancelClick(position);
+                        }
+                    }
+                }
+            });
+
+            returnedTransaction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onReturnClick(position);
+                        }
+                    }
+                }
+            });
         }
         void SetBorrowedFromMe(Boolean isBorrowedFromMe){
             this.isBorrowedFromMe = isBorrowedFromMe;
@@ -223,22 +299,57 @@ public class TransactionListFragment extends Fragment {
             transactionRequest = tr;
             status.setText(transactionRequest.getStatus());
             requestText.setText(transactionRequest.getRequest_text());
+            updateItemView(tr);
+            if (tr.getImgUrl() != null && tr.getImgUrl() != "") {
+                Picasso.get().load(tr.getImgUrl()).into(imgView);
+            }
+        }
+
+        private void updateItemView(TransactionRequest tr){
             if(isBorrowedFromMe){
+                if (tr.getStatus().equals("Approved")) {
+                    approveTransaction.setEnabled(false);
+                    approveTransaction.setVisibility(View.GONE);
+                    rejectTransaction.setEnabled(false);
+                    rejectTransaction.setVisibility(View.GONE);
+                    returnedTransaction.setEnabled(true);
+                    returnedTransaction.setVisibility(View.VISIBLE);
+                }
+                else{
+                    approveTransaction.setEnabled(true);
+                    approveTransaction.setVisibility(View.VISIBLE);
+                    rejectTransaction.setEnabled(true);
+                    rejectTransaction.setVisibility(View.VISIBLE);
+                    returnedTransaction.setEnabled(false);
+                    returnedTransaction.setVisibility(View.GONE);
+                }
+
+                cancelTransaction.setEnabled(false);
+                cancelTransaction.setVisibility(View.GONE);
                 fromTo.setText("to:");
                 otherUserName.setText(transactionRequest.getBorrow_user_name());
             }
-            else {
+            else{
+                approveTransaction.setEnabled(false);
+                approveTransaction.setVisibility(View.GONE);
+                rejectTransaction.setEnabled(false);
+                rejectTransaction.setVisibility(View.GONE);
+                cancelTransaction.setEnabled(true);
+                cancelTransaction.setVisibility(View.VISIBLE);
+                returnedTransaction.setEnabled(false);
+                returnedTransaction.setVisibility(View.GONE);
                 fromTo.setText("from:");
                 otherUserName.setText((transactionRequest.getLend_user_name()));
-            }
-            if (tr.getImgUrl() != null && tr.getImgUrl() != "") {
-                Picasso.get().load(tr.getImgUrl()).into(imgView);
             }
         }
     }
 
     interface OnItemClickListener{
         void onClick(int position);
+        void onApproveClick(int position);
+        void onRejectClick(int position);
+        void onCancelClick(int position);
+        void onReturnClick(int position);
     }
 
     class TransactionListAdapter extends RecyclerView.Adapter<TransactionItemViewHolder>{
