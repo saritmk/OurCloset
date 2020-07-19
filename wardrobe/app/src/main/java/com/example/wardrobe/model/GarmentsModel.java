@@ -1,21 +1,14 @@
 package com.example.wardrobe.model;
 
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.firebase.GarmentsFirebase;
-import com.google.android.gms.tasks.Continuation;
+import com.example.wardrobe.model.firebase.TransactionRequestsFirebase;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.List;
@@ -130,14 +123,24 @@ public class GarmentsModel {
         });
     }
 
-    public void delete(final Garment garment, final Listener<Boolean> listener){
-        GarmentsFirebase.deleteGarment(garment.getId(), new Listener<Boolean>() {
+    public void delete(final Garment garment, final Listener<Boolean> outListener){
+        TransactionRequestsFirebase.deleteTransactionByGarmentId(garment.getId(), new TransactionRequestsModel.Listener<Boolean>() {
             @Override
-            public void onComplete(Boolean data) {
-                if(data) {
-                    AppLocalDb.db.garmentDao().delete(garment);
-                    listener.onComplete(true);
-                }
+            public void onComplete(Boolean listener) {
+                TransactionRequestsModel.instance.deleteTransactionByGarmentId(garment.getId(), new TransactionRequestsModel.Listener<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean listener) {
+                        GarmentsFirebase.deleteGarment(garment.getId(), new Listener<Boolean>() {
+                            @Override
+                            public void onComplete(Boolean data) {
+                                if(data) {
+                                    AppLocalDb.db.garmentDao().delete(garment);
+                                    outListener.onComplete(true);
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
     }

@@ -105,4 +105,8 @@ public class TransactionRequestsModel {
         refreshLentToTransactionsList(user_id,null);
         return liveData;
     }
+    public void deleteTransactionByGarmentId(String garment_id, final Listener<Boolean> listener) {
+        AppLocalDb.db.transactionDao().deleteTransactionByGarmentId(garment_id);
+        listener.onComplete(true);
+    }
 }

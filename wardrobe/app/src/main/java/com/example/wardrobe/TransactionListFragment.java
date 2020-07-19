@@ -41,6 +41,8 @@ public class TransactionListFragment extends Fragment {
     TransactionViewModel viewModelTransactionItem;
     LiveData<List<TransactionRequest>> liveDataBorrowed;
     LiveData<List<TransactionRequest>> liveDataLent;
+    TextView EmptyLentTextView;
+    TextView EmptyBorrwedTextView;
     Button LentButton;
     Button BorrowedButton;
 
@@ -126,6 +128,11 @@ public class TransactionListFragment extends Fragment {
         LentButton = view.findViewById(R.id.button_lent);
 
         BorrowedButton = view.findViewById(R.id.button_borewed);
+        EmptyLentTextView = view.findViewById(R.id.empty_tranactions_lent);
+        EmptyBorrwedTextView = view.findViewById(R.id.empty_tranactions_borrwed);
+        EmptyLentTextView.setVisibility(View.GONE);
+        EmptyBorrwedTextView.setVisibility(View.GONE);
+
         viewModel.SetBorrowedFromMe(isBorrowedFromMe);
         liveDataBorrowed = viewModel.getBorrowedData();
         liveDataBorrowed.observe(getViewLifecycleOwner(), new Observer<List<TransactionRequest>>() {
@@ -133,6 +140,11 @@ public class TransactionListFragment extends Fragment {
             public void onChanged(List<TransactionRequest> transactionRequests) {
                 borrowedData = transactionRequests;
                 if(isBorrowedFromMe){
+                    if(transactionRequests.isEmpty()) {
+                        EmptyBorrwedTextView.setVisibility(View.VISIBLE);
+                        EmptyLentTextView.setVisibility(View.GONE);
+
+                    }
                     data = transactionRequests;
                     adapter.notifyDataSetChanged();
                 }
@@ -145,6 +157,10 @@ public class TransactionListFragment extends Fragment {
             public void onChanged(List<TransactionRequest> transactionRequests) {
                 lentData = transactionRequests;
                 if(!isBorrowedFromMe){
+                    if(transactionRequests.isEmpty()) {
+                        EmptyBorrwedTextView.setVisibility(View.GONE);
+                        EmptyLentTextView.setVisibility(View.VISIBLE);
+                    }
                     data = transactionRequests;
                     adapter.notifyDataSetChanged();
                 }
@@ -184,26 +200,27 @@ public class TransactionListFragment extends Fragment {
 
     private void onLentToMeButtonClick(View view){
         data = lentData;
+        EmptyBorrwedTextView.setVisibility(View.GONE);
         adapter.SetBorrowedFromMe(false);
         adapter.notifyDataSetChanged();
         isBorrowedFromMe = false;
         viewModel.SetBorrowedFromMe(false);
-        //liveData = viewModel.getData();
-
-//        viewModel.refresh(new TransactionRequestsModel.CompListener() {
-//            @Override
-//            public void onComplete() {
-//                liveData = viewModel.getData();
-//            }
-//        });
+        if(data.isEmpty()) {
+            EmptyLentTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void onBorrwedFromMeButtonClick(View view){
         data = borrowedData;
+        EmptyLentTextView.setVisibility(View.GONE);
         adapter.SetBorrowedFromMe(true);
         adapter.notifyDataSetChanged();
         isBorrowedFromMe = true;
         viewModel.SetBorrowedFromMe(true);
+
+        if(data.isEmpty()) {
+            EmptyBorrwedTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     static class TransactionItemViewHolder extends RecyclerView.ViewHolder{

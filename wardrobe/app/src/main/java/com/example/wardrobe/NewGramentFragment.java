@@ -22,10 +22,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -86,7 +87,7 @@ public class NewGramentFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vi) {
-                NewGramentFragment.this.saveGarment();
+                if (validatetext() && validatePicture())NewGramentFragment.this.saveGarment();
             }
         });
 
@@ -260,7 +261,9 @@ public class NewGramentFragment extends Fragment {
                 viewModel.addNewGarment(garment, tempFile, new GarmentsModel.CompListener() {
                     @Override
                     public void onComplete() {
-                        // Do something
+                        Toast.makeText(getActivity(), "added successfully", Toast.LENGTH_SHORT).show();
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
+                        navController.navigate(R.id.action_newGramentFragment_to_closetListFragment);
                     }
                 });
             } else {
@@ -273,5 +276,29 @@ public class NewGramentFragment extends Fragment {
 
             }
         }
+    }
+
+    public boolean validatetext() {
+        if (sizeText.getText().toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must fill size", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (colorText.getText().toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must fill color", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (typeText.getText().toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must fill type", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePicture(){
+        if (tempFile == null || tempFile.toString().trim().equals("")) {
+            Toast.makeText(getActivity(), "you must upload picture", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 }

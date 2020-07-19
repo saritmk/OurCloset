@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
 import com.squareup.picasso.Picasso;
 
@@ -24,9 +27,9 @@ public class GarmentDetailsFragment extends Fragment {
     TextView TypeTextView;
     ImageView ImageView;
     Button EditButton;
-
-    // TODO: Delete!! this is a temporery test
+    Button DeleteButton;
     TransactionViewModel viewModel;
+    GarmentsViewModel GarmentsviewModel;
 
     public GarmentDetailsFragment() {
         // Required empty public constructor
@@ -36,6 +39,7 @@ public class GarmentDetailsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        GarmentsviewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
     }
 
     @Override
@@ -49,6 +53,7 @@ public class GarmentDetailsFragment extends Fragment {
         TypeTextView = view.findViewById(R.id.garment_details_Type);
         ImageView = view.findViewById(R.id.garment_details_img);
         EditButton = view.findViewById(R.id.garment_details_edit_button);
+        DeleteButton = view.findViewById(R.id.garment_details_delete_button);
 
         garment = GarmentDetailsFragmentArgs.fromBundle(getArguments()).getGarment();
         if (garment != null){
@@ -60,6 +65,12 @@ public class GarmentDetailsFragment extends Fragment {
                 GarmentDetailsFragment.this.onEditButton();
             }
         });
+        DeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GarmentDetailsFragment.this.onDeleteButton();
+            }
+        });
 
         return view;
     }
@@ -68,7 +79,18 @@ public class GarmentDetailsFragment extends Fragment {
         GarmentDetailsFragmentDirections.ActionGarmentDetailsFragmentToEditGarmentFragment direction = GarmentDetailsFragmentDirections.actionGarmentDetailsFragmentToEditGarmentFragment("Edit",garment.getId());
         Navigation.findNavController(getView()).navigate(direction);
     }
-
+    private void onDeleteButton(){
+        GarmentsviewModel.deleteGarment(garment, new GarmentsModel.Listener<Boolean>() {
+            @Override
+            public void onComplete(Boolean x) {
+                if (x){
+                    Toast.makeText(getActivity(), "deleted", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
+                    navController.navigate(R.id.action_garmentDetailsFragment_to_closetListFragment);
+                }
+            }
+        });
+    }
     private void update_display() {
         ColorTextView.setText(garment.getColor());
         SizeTextView.setText(garment.getSize());
