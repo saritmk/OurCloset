@@ -28,16 +28,6 @@
         app:layout_constraintTop_toTopOf="@+id/transaction_garment_iv" />
 
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="70dp"
-        android:text="status:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/transaction_garment_iv" />
-
-    <TextView
         android:id="@+id/textView9"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -62,10 +52,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/request_text_transaction_tv"
@@ -81,5 +71,47 @@
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/transaction_garment_iv"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <Button
+        android:id="@+id/approve_transaction_btn"
+        android:layout_width="40dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:background="#BDDCBE"
+        android:outlineAmbientShadowColor="#FFFFFF"
+        android:text="Y"
+        app:layout_constraintEnd_toStartOf="@+id/reject_transaction_btn"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <Button
+        android:id="@+id/reject_transaction_btn"
+        android:layout_width="40dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="8dp"
+        android:background="#EAA9A9"
+        android:text="N"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/approve_transaction_btn" />
+
+    <Button
+        android:id="@+id/cancel_request_btn"
+        android:layout_width="84dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="16dp"
+        android:background="#DFB0B0"
+        android:text="Cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/request_text_transaction_tv" />
+
+    <Button
+        android:id="@+id/returned_request_btn"
+        android:layout_width="119dp"
+        android:layout_height="37dp"
+        android:layout_marginEnd="8dp"
+        android:background="#B7E8AA"
+        android:text="returned to me"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/request_text_transaction_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

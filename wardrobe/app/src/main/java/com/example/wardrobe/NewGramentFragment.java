@@ -295,7 +295,7 @@ public class NewGramentFragment extends Fragment {
     }
 
     private boolean validatePicture(){
-        if (tempFile == null || tempFile.toString().trim().equals("")) {
+        if ((tempFile == null || tempFile.toString().trim().equals("")) && garmentToEdit == null) {
             Toast.makeText(getActivity(), "you must upload picture", Toast.LENGTH_LONG).show();
             return false;
         }

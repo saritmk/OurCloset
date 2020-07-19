@@ -82,7 +82,9 @@ public class TransactionRequestsModel {
             public void onComplete(Boolean data) {
                 if(data) {
                     AppLocalDb.db.transactionDao().delete(transactionRequest);
-                    listener.onComplete(true);
+                    if(listener!=null){
+                        listener.onComplete(true);
+                    }
                 }
             }
         });
@@ -90,6 +92,10 @@ public class TransactionRequestsModel {
 
     public void updateTransactionStatus(String transaction_id, String newStatus, final Listener<Boolean> listener){
         TransactionRequestsFirebase.updateTransactionStatus(transaction_id, newStatus, listener);
+    }
+
+    public void updateTransactionWhenGarmentChanged(String garment_id, String img_url, final Listener<Boolean> listener){
+        TransactionRequestsFirebase.updateTransactionWhenGarmentChanged(garment_id, img_url, listener);
     }
 
     public LiveData<List<TransactionRequest>> getAllBorrowedFromTransactions(String user_id){
