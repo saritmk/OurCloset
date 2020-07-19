@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.GarmentsModel;
+import com.example.wardrobe.model.UsersModel;
 import com.example.wardrobe.model.entities.Garment;
+import com.example.wardrobe.model.entities.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -34,6 +36,11 @@ public class FriendsGarmentsListFragment extends Fragment {
     GarmentListAdapter adapter;
     GarmentsViewModel viewModel;
     LiveData<List<Garment>> liveData;
+    TextView emptyTextView;
+    TextView OwnerTextView;
+    ImageView OwnerPicture;
+    UsersViewModel usersViewModel;
+    User Owner;
 
     interface Delegate{
         void onItemSelected(Garment student);
@@ -56,7 +63,7 @@ public class FriendsGarmentsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
 
     }
@@ -71,6 +78,11 @@ public class FriendsGarmentsListFragment extends Fragment {
 
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
+
+        emptyTextView = view.findViewById(R.id.empty_closet);
+        emptyTextView.setVisibility(View.GONE);
+        OwnerTextView = view.findViewById(R.id.closet_user_name);
+        OwnerPicture = view.findViewById(R.id.img_closet_list);
 
         adapter = new GarmentListAdapter();
         list.setAdapter(adapter);
@@ -88,11 +100,26 @@ public class FriendsGarmentsListFragment extends Fragment {
 
         owner_id = FriendsGarmentsListFragmentArgs.fromBundle(getArguments()).getOwnerId();
         viewModel.SetOwnerId(owner_id);
-
+        if(owner_id != "") {
+            usersViewModel.getUser(owner_id, new UsersModel.Listener<User>() {
+                @Override
+                public User onComplete(User user) {
+                    Owner = user;
+                    OwnerTextView.setText(user.getName());
+                    if(user.getImg_url() != null && user.getImg_url() != "") {
+                        Picasso.get().load(user.getImg_url()).into(OwnerPicture);
+                    }
+                    return user;
+                }
+            });
+        }
         liveData = viewModel.getData();
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
             @Override
             public void onChanged(List<Garment> garments) {
+                if(garments.isEmpty()) {
+                    emptyTextView.setVisibility(View.VISIBLE);
+                }
                 data = garments;
                 adapter.notifyDataSetChanged();
             }

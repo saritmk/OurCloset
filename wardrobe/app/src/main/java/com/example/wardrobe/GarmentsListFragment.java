@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardrobe.model.GarmentsModel;
+import com.example.wardrobe.model.UsersModel;
 import com.example.wardrobe.model.entities.Garment;
+import com.example.wardrobe.model.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -35,8 +37,13 @@ public class GarmentsListFragment extends Fragment {
     List<Garment> data = new LinkedList<Garment>();
     GarmentListAdapter adapter;
     GarmentsViewModel viewModel;
+    UsersViewModel usersViewModel;
     LiveData<List<Garment>> liveData;
     TextView emptyTextView;
+    TextView OwnerTextView;
+    ImageView OwnerPicture;
+    User Owner;
+
     interface Delegate{
         void onItemSelected(Garment student);
     }
@@ -44,15 +51,6 @@ public class GarmentsListFragment extends Fragment {
     Delegate parent;
 
     public GarmentsListFragment() {
-//        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
-//            @Override
-//            public void onComplete(List<Garment> _data) {
-//                data = _data;
-//                if(adapter != null) {
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -66,6 +64,7 @@ public class GarmentsListFragment extends Fragment {
         }
 
         viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currUser = auth.getCurrentUser();
@@ -86,7 +85,8 @@ public class GarmentsListFragment extends Fragment {
         list.setHasFixedSize(true);
         emptyTextView = view.findViewById(R.id.empty_closet);
         emptyTextView.setVisibility(View.GONE);
-
+        OwnerTextView = view.findViewById(R.id.closet_user_name);
+        OwnerPicture = view.findViewById(R.id.img_closet_list);
 
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
@@ -107,15 +107,24 @@ public class GarmentsListFragment extends Fragment {
 
 
         liveData = viewModel.getData();
-
+        if(owner_id != "") {
+            usersViewModel.getUser(owner_id, new UsersModel.Listener<User>() {
+                @Override
+                public User onComplete(User user) {
+                    Owner = user;
+                    OwnerTextView.setText(user.getName());
+                    if(user.getImg_url() != null && user.getImg_url() != "") {
+                        Picasso.get().load(user.getImg_url()).into(OwnerPicture);
+                    }
+                    return user;
+                }
+            });
+        }
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
             @Override
             public void onChanged(List<Garment> garments) {
                 if(garments.isEmpty()) {
                     emptyTextView.setVisibility(View.VISIBLE);
-                }
-                else {
-
                 }
                 data = garments;
                 adapter.notifyDataSetChanged();
