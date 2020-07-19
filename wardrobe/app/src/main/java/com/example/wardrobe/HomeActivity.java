@@ -2,6 +2,7 @@ package com.example.wardrobe;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -11,7 +12,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.wardrobe.model.entities.Garment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity implements GarmentsListFragment.Delegate {
     NavController navCtrl;
@@ -31,10 +31,13 @@ public class HomeActivity extends AppCompatActivity implements GarmentsListFragm
         NavigationUI.setupWithNavController(bottomNav, navCtrl);
 
         if (auth.getCurrentUser() == null) {
+            bottomNav.setVisibility(View.GONE);
             if (navCtrl.getCurrentDestination().getId() != R.id.loginFragment) {
                 navCtrl.navigate(R.id.loginFragment);
+
             }
         } else {
+            bottomNav.setVisibility(View.VISIBLE);
             if (navCtrl.getCurrentDestination().getId() != R.id.closetListFragment) {
                navCtrl.navigate(R.id.closetListFragment);
             }

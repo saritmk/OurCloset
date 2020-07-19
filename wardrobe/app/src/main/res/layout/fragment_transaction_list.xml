@@ -41,8 +41,6 @@
         android:id="@+id/transactions_list_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#ACA4A4"
-        android:backgroundTint="#959191"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_lent"
         app:layout_constraintVertical_bias="1.0"
@@ -62,16 +60,17 @@
         android:text="I borrowed"
         app:layout_constraintEnd_toStartOf="@+id/button_borewed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="?android:attr/borderlessButtonStyle"/>
 
     <Button
         android:id="@+id/button_borewed"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:lineHeight="0dp"
         android:text="Borrwed from me"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_lent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
+        app:layout_constraintTop_toTopOf="parent"
+        style="?android:attr/borderlessButtonStyle"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

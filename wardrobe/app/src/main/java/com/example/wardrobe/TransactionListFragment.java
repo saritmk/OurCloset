@@ -1,7 +1,7 @@
 package com.example.wardrobe;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -147,13 +147,13 @@ public class TransactionListFragment extends Fragment {
         });
 
         LentButton = view.findViewById(R.id.button_lent);
-
         BorrowedButton = view.findViewById(R.id.button_borewed);
         EmptyLentTextView = view.findViewById(R.id.empty_tranactions_lent);
         EmptyBorrwedTextView = view.findViewById(R.id.empty_tranactions_borrwed);
         EmptyLentTextView.setVisibility(View.GONE);
         EmptyBorrwedTextView.setVisibility(View.GONE);
-
+        BorrowedButton.setBackgroundColor(Color.parseColor("#FAFAFA"));
+        LentButton.setBackgroundColor(Color.parseColor("#e1877d"));
         viewModel.SetBorrowedFromMe(isBorrowedFromMe);
         liveDataBorrowed = viewModel.getBorrowedData();
         liveDataBorrowed.observe(getViewLifecycleOwner(), new Observer<List<TransactionRequest>>() {
@@ -204,6 +204,9 @@ public class TransactionListFragment extends Fragment {
         LentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BorrowedButton.setBackgroundColor(Color.parseColor("#e1877d"));
+                LentButton.setBackgroundColor(Color.parseColor("#FAFAFA"));
+
                 onLentToMeButtonClick(v);
             }
         });
@@ -211,6 +214,9 @@ public class TransactionListFragment extends Fragment {
         BorrowedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BorrowedButton.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                LentButton.setBackgroundColor(Color.parseColor("#e1877d"));
+
                 onBorrwedFromMeButtonClick(v);
             }
         });

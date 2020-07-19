@@ -52,6 +52,7 @@ public class LoginFragment extends Fragment implements
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_login, container, false);
         view.findViewById(R.id.sign_in_btn).setOnClickListener(this);
+
         return view;
     }
 
@@ -102,7 +103,6 @@ public class LoginFragment extends Fragment implements
                 User newUser = new User(FirebaseAuth.getInstance().getCurrentUser());
 
                 userViewModel.saveUser(newUser);
-
                 NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
                 navController.navigate(R.id.action_loginFragment_to_garmentsListFragment);
             }

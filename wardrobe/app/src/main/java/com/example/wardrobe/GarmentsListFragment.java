@@ -22,6 +22,7 @@ import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.UsersModel;
 import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.User;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -95,6 +96,8 @@ public class GarmentsListFragment extends Fragment {
         OwnerPicture = view.findViewById(R.id.img_closet_list);
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
+        BottomNavigationView bottomNav = getActivity().findViewById(R.id.home_bottomNavigationView);
+        bottomNav.setVisibility(View.VISIBLE);
 
         adapter = new GarmentListAdapter();
         list.setAdapter(adapter);
