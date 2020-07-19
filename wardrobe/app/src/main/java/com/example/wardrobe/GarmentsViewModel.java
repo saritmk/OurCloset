@@ -1,13 +1,10 @@
 package com.example.wardrobe;
 
-import android.net.Uri;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.wardrobe.model.GarmentsModel;
 import com.example.wardrobe.model.entities.Garment;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
 import java.util.List;
@@ -47,5 +44,8 @@ public class GarmentsViewModel extends ViewModel {
                               String newColor,
                               GarmentsModel.Listener<Boolean> listener){
         GarmentsModel.instance.updateGarment(currGarment.getId(), currGarment.getOwner_id(), currGarment.getImageUrl(), newImg, newType, newSize, newColor, listener);
+    }
+    public void deleteGarment(Garment garment, GarmentsModel.Listener<Boolean> listener) {
+        GarmentsModel.instance.delete(garment,listener);
     }
 }
