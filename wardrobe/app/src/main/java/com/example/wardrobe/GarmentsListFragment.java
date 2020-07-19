@@ -36,7 +36,7 @@ public class GarmentsListFragment extends Fragment {
     GarmentListAdapter adapter;
     GarmentsViewModel viewModel;
     LiveData<List<Garment>> liveData;
-
+    TextView emptyTextView;
     interface Delegate{
         void onItemSelected(Garment student);
     }
@@ -84,6 +84,9 @@ public class GarmentsListFragment extends Fragment {
         final View view =  inflater.inflate(R.layout.fragment_closet_list, container, false);
         list = view.findViewById(R.id.closet_list_list);
         list.setHasFixedSize(true);
+        emptyTextView = view.findViewById(R.id.empty_closet);
+        emptyTextView.setVisibility(View.GONE);
+
 
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
@@ -104,9 +107,16 @@ public class GarmentsListFragment extends Fragment {
 
 
         liveData = viewModel.getData();
+
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
             @Override
             public void onChanged(List<Garment> garments) {
+                if(garments.isEmpty()) {
+                    emptyTextView.setVisibility(View.VISIBLE);
+                }
+                else {
+
+                }
                 data = garments;
                 adapter.notifyDataSetChanged();
             }
