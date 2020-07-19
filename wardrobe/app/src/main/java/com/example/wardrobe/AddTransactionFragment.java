@@ -9,9 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.wardrobe.model.TransactionRequestsModel;
 import com.example.wardrobe.model.UsersModel;
@@ -103,6 +105,9 @@ public class AddTransactionFragment extends Fragment {
                 @Override
                 public void onComplete(Boolean data) {
                     submitTransactionBtn.setEnabled(false);
+                    Toast.makeText(getActivity(), "your request successfully submitted", Toast.LENGTH_SHORT).show();
+                    AddTransactionFragmentDirections.ActionAddTransactionFragmentToClosetListFragment2 direction= AddTransactionFragmentDirections.actionAddTransactionFragmentToClosetListFragment2(garment_owner_id);
+                    Navigation.findNavController(getView()).navigate(direction);
                 }
             });
         }

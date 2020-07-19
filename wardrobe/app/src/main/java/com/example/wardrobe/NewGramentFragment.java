@@ -261,19 +261,20 @@ public class NewGramentFragment extends Fragment {
                 viewModel.addNewGarment(garment, tempFile, new GarmentsModel.CompListener() {
                     @Override
                     public void onComplete() {
-                        Toast.makeText(getActivity(), "added successfully", Toast.LENGTH_SHORT).show();
-                        NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
-                        navController.navigate(R.id.action_newGramentFragment_to_closetListFragment);
+                    Toast.makeText(getActivity(), "added successfully", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
+                    navController.navigate(R.id.action_newGramentFragment_to_closetListFragment);
                     }
                 });
             } else {
                 viewModel.updateGarment(this.garmentToEdit, tempFile, typeText.getText().toString(), sizeText.getText().toString(), colorText.getText().toString(), new GarmentsModel.Listener<Boolean>() {
                     @Override
                     public void onComplete(Boolean data) {
-                        // Do somthing
+                    Toast.makeText(getActivity(), "updated successfully", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.home_nav_host);
+                    navController.navigate(R.id.action_newGramentFragment_to_closetListFragment);
                     }
                 });
-
             }
         }
     }

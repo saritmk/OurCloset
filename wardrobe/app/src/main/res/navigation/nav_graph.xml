@@ -134,6 +134,14 @@
         <argument
             android:name="garment"
             app:argType="com.example.wardrobe.model.entities.Garment" />
+        <action
+            android:id="@+id/action_addTransactionFragment_to_closetListFragment2"
+            app:destination="@id/closetListFragment">
+            <argument
+                android:name="owner_id"
+                app:argType="string"
+                app:nullable="true"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
