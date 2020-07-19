@@ -31,11 +31,11 @@ public class TransactionViewModel extends ViewModel {
         });
     }
 
-    public void updateTransactionStatus(String transactionId, String newStatus){
-        TransactionRequestsModel.instance.updateTransactionStatus(transactionId,newStatus, null);
+    public void updateTransactionStatus(String transactionId, String newStatus, final TransactionRequestsModel.Listener<Boolean> listener){
+        TransactionRequestsModel.instance.updateTransactionStatus(transactionId,newStatus, listener);
     }
 
-    public void deleteTransaction(TransactionRequest transaction){
-        TransactionRequestsModel.instance.deleteTransaction(transaction,null);
+    public void deleteTransaction(TransactionRequest transaction, final TransactionRequestsModel.Listener<Boolean> listener){
+        TransactionRequestsModel.instance.deleteTransaction(transaction,listener);
     }
 }
