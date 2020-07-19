@@ -94,6 +94,10 @@ public class TransactionRequestsModel {
         TransactionRequestsFirebase.updateTransactionStatus(transaction_id, newStatus, listener);
     }
 
+    public void updateTransactionWhenGarmentChanged(String garment_id, String img_url, final Listener<Boolean> listener){
+        TransactionRequestsFirebase.updateTransactionWhenGarmentChanged(garment_id, img_url, listener);
+    }
+
     public LiveData<List<TransactionRequest>> getAllBorrowedFromTransactions(String user_id){
         LiveData<List<TransactionRequest>> liveData = AppLocalDb.db.transactionDao().getAllBorrowedFrom(user_id);
         refreshBorrowedFromTransactionsList(user_id,null);

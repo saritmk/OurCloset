@@ -101,7 +101,20 @@ public class GarmentsModel {
                 updateGarment.setType(type);
                 if (newImage == null) {
                     updateGarment.setImageUrl(oldImageUri);
-                    GarmentsFirebase.updateGarment(updateGarment,listener);
+                    GarmentsFirebase.updateGarment(updateGarment, new Listener<Boolean>() {
+                        @Override
+                        public void onComplete(Boolean data) {
+
+                            TransactionRequestsModel.instance.updateTransactionWhenGarmentChanged(updateGarment.getId(),
+                                    updateGarment.getImageUrl(),
+                                    new TransactionRequestsModel.Listener<Boolean>() {
+                                        @Override
+                                        public void onComplete(Boolean data) {
+                                            listener.onComplete(data);
+                                        }
+                                    });
+                        }
+                    });
                 } else {
                     GarmentsFirebase.deleteImage(oldImageUri, new OnSuccessListener<Object>() {
                         @Override
@@ -110,7 +123,20 @@ public class GarmentsModel {
                                 @Override
                                 public void onSuccess(Object imgUrl) {
                                     updateGarment.setImageUrl(imgUrl.toString());
-                                    GarmentsFirebase.updateGarment(updateGarment,listener);
+                                    GarmentsFirebase.updateGarment(updateGarment, new Listener<Boolean>() {
+                                        @Override
+                                        public void onComplete(Boolean data) {
+
+                                            TransactionRequestsModel.instance.updateTransactionWhenGarmentChanged(updateGarment.getId(),
+                                                    updateGarment.getImageUrl(),
+                                                    new TransactionRequestsModel.Listener<Boolean>() {
+                                                        @Override
+                                                        public void onComplete(Boolean data) {
+                                                            listener.onComplete(data);
+                                                        }
+                                                    });
+                                        }
+                                    });
                                 }
                             });
                         }

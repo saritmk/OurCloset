@@ -94,6 +94,27 @@ public class TransactionRequestsFirebase {
         });
     }
 
+    public static void updateTransactionWhenGarmentChanged(String garment_id, final String img_url, final TransactionRequestsModel.Listener<Boolean> listener){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(TRANSACTION_REQUESTS_COLLECTION).whereEqualTo("garment_id",garment_id)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                querySnapshot.forEach(new Consumer<QueryDocumentSnapshot>() {
+                    @Override
+                    public void accept(QueryDocumentSnapshot doc) {
+                        doc.getReference().update("imgUrl",img_url);
+                    }
+                });
+            }
+        }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot x) {
+                listener.onComplete(true);
+            }
+        });
+    }
+
     public static void deleteTransaction(String transactionId, final TransactionRequestsModel.Listener<Boolean> listener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(TRANSACTION_REQUESTS_COLLECTION).document(transactionId)
