@@ -27,4 +27,7 @@ public interface TransactionDao {
 
     @Delete
     void delete(TransactionRequest transaction);
+
+    @Query("DELETE FROM TransactionRequest WHERE garment_id= :garment_id")
+    void deleteTransactionByGarmentId(String garment_id);
 }

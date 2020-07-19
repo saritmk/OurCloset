@@ -103,9 +103,9 @@ public class TransactionListFragment extends Fragment {
 
         BorrowedButton = view.findViewById(R.id.button_borewed);
         EmptyLentTextView = view.findViewById(R.id.empty_tranactions_lent);
-
         EmptyBorrwedTextView = view.findViewById(R.id.empty_tranactions_borrwed);
-
+        EmptyLentTextView.setVisibility(View.GONE);
+        EmptyBorrwedTextView.setVisibility(View.GONE);
 
         viewModel.SetBorrowedFromMe(isBorrowedFromMe);
         liveDataBorrowed = viewModel.getBorrowedData();
@@ -182,14 +182,6 @@ public class TransactionListFragment extends Fragment {
         if(data.isEmpty()) {
             EmptyLentTextView.setVisibility(View.VISIBLE);
         }
-        //liveData = viewModel.getData();
-
-//        viewModel.refresh(new TransactionRequestsModel.CompListener() {
-//            @Override
-//            public void onComplete() {
-//                liveData = viewModel.getData();
-//            }
-//        });
     }
 
     private void onBorrwedFromMeButtonClick(View view){
@@ -202,12 +194,6 @@ public class TransactionListFragment extends Fragment {
         if(data.isEmpty()) {
             EmptyBorrwedTextView.setVisibility(View.VISIBLE);
         }
-//        viewModel.refresh(new TransactionRequestsModel.CompListener() {
-//            @Override
-//            public void onComplete() {
-//                liveData = viewModel.getData();
-//            }
-//        });
     }
 
     static class TransactionItemViewHolder extends RecyclerView.ViewHolder{

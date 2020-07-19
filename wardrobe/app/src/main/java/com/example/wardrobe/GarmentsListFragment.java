@@ -2,7 +2,6 @@ package com.example.wardrobe;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,9 +96,7 @@ public class GarmentsListFragment extends Fragment {
         adapter.setOnIntemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                Log.d("TAG","row was clicked" + position);
                 Garment garment = data.get(position);
-                //parent.onItemSelected(garment);
                 NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
                 Navigation.findNavController(view).navigate(direction);
             }

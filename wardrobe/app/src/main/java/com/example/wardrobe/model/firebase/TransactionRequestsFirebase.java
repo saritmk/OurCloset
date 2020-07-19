@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.wardrobe.model.TransactionRequestsModel;
 import com.example.wardrobe.model.entities.TransactionRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class TransactionRequestsFirebase {
     final static String TRANSACTION_REQUESTS_COLLECTION = "Transaction_request";
@@ -105,7 +107,26 @@ public class TransactionRequestsFirebase {
                     }
                 });
     }
-
+    public static void deleteTransactionByGarmentId(String garmentId, final TransactionRequestsModel.Listener<Boolean> listener){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(TRANSACTION_REQUESTS_COLLECTION).whereEqualTo("garment_id",garmentId)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                querySnapshot.forEach(new Consumer<QueryDocumentSnapshot>() {
+                    @Override
+                    public void accept(QueryDocumentSnapshot doc) {
+                        doc.getReference().delete();
+                    }
+                });
+            }
+        }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot x) {
+                listener.onComplete(true);
+            }
+        });
+    }
     private static Map<String, Object> toJson(TransactionRequest transaction){
         HashMap<String, Object> result = new HashMap<>();
         result.put("borrow_user_id", transaction.getBorrow_user_id());
