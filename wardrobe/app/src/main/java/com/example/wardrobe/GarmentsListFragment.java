@@ -32,6 +32,7 @@ import java.util.List;
 
 public class GarmentsListFragment extends Fragment {
     String owner_id="";
+    String current_id="";
     RecyclerView list;
     List<Garment> data = new LinkedList<Garment>();
     GarmentListAdapter adapter;
@@ -68,11 +69,17 @@ public class GarmentsListFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currUser = auth.getCurrentUser();
 
-        if(currUser != null){
-            owner_id = currUser.getUid();
-            viewModel.SetOwnerId(owner_id);
+        owner_id = GarmentsListFragmentArgs.fromBundle(getArguments()).getOwnerId();
+
+        if(currUser != null) {
+            current_id= currUser.getUid();
         }
 
+        if(owner_id.equals("")){
+            owner_id = current_id;
+        }
+
+        viewModel.SetOwnerId(owner_id);
     }
 
     @Override
@@ -86,7 +93,6 @@ public class GarmentsListFragment extends Fragment {
         emptyTextView.setVisibility(View.GONE);
         OwnerTextView = view.findViewById(R.id.closet_user_name);
         OwnerPicture = view.findViewById(R.id.img_closet_list);
-
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
 
@@ -97,26 +103,30 @@ public class GarmentsListFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 Garment garment = data.get(position);
-                NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
-                Navigation.findNavController(view).navigate(direction);
+                if(current_id.equals(owner_id)) {
+                    NavGraphDirections.ActionGlobalGarmentDetailsFragment direction = GarmentDetailsFragmentDirections.actionGlobalGarmentDetailsFragment(garment);
+                    Navigation.findNavController(view).navigate(direction);
+                }
+                else {
+                    GarmentsListFragmentDirections.ActionClosetListFragmentToFriendsGarmentDetailsFragment direction = GarmentsListFragmentDirections.actionClosetListFragmentToFriendsGarmentDetailsFragment(garment);
+                    Navigation.findNavController(view).navigate(direction);
+                }
+            }
+        });
+        liveData = viewModel.getData();
+
+        usersViewModel.getUser(owner_id, new UsersModel.Listener<User>() {
+            @Override
+            public User onComplete(User user) {
+                Owner = user;
+                OwnerTextView.setText(Owner.getName());
+                if(Owner.getImg_url() != null && Owner.getImg_url() != "") {
+                    Picasso.get().load(Owner.getImg_url()).into(OwnerPicture);
+                }
+                return user;
             }
         });
 
-
-        liveData = viewModel.getData();
-        if(owner_id != "") {
-            usersViewModel.getUser(owner_id, new UsersModel.Listener<User>() {
-                @Override
-                public User onComplete(User user) {
-                    Owner = user;
-                    OwnerTextView.setText(user.getName());
-                    if(user.getImg_url() != null && user.getImg_url() != "") {
-                        Picasso.get().load(user.getImg_url()).into(OwnerPicture);
-                    }
-                    return user;
-                }
-            });
-        }
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
             @Override
             public void onChanged(List<Garment> garments) {
@@ -143,11 +153,8 @@ public class GarmentsListFragment extends Fragment {
                 });
             }
         });
-
         return view;
     }
-
-
 
     static class GarmentItemViewHolder extends RecyclerView.ViewHolder{
         TextView id;

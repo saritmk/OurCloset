@@ -49,15 +49,6 @@ public class FriendsGarmentsListFragment extends Fragment {
     Delegate parent;
 
     public FriendsGarmentsListFragment() {
-//        GarmentsModel.instance.getAllGarments(new GarmentsModel.GetAllGarmentsListener() {
-//            @Override
-//            public void onComplete(List<Garment> _data) {
-//                data = _data;
-//                if(adapter != null) {
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -65,7 +56,6 @@ public class FriendsGarmentsListFragment extends Fragment {
         super.onAttach(context);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         viewModel = new ViewModelProvider(this).get(GarmentsViewModel.class);
-
     }
 
     @Override

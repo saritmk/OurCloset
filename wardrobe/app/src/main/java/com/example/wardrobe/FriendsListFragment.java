@@ -51,12 +51,6 @@ public class FriendsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof Delegate) {
-//            parent = (Delegate) getActivity();
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + "student list parent activity must implement dtudent ;list fragment Delegate");
-//        }
 
         viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
     }
@@ -86,7 +80,9 @@ public class FriendsListFragment extends Fragment {
             public void onClick(int position) {
                 Log.d("TAG","row was clicked" + position);
                 User friend = data.get(position);
-                FriendsListFragmentDirections.ActionFriendsListFragmentToFriendsGarmentsListFragment direction = FriendsListFragmentDirections.actionFriendsListFragmentToFriendsGarmentsListFragment(friend.getUser_id());
+                //FriendsListFragmentDirections.ActionFriendsListFragmentToFriendsGarmentsListFragment direction = FriendsListFragmentDirections.actionFriendsListFragmentToFriendsGarmentsListFragment(friend.getUser_id());
+                //Navigation.findNavController(view).navigate(direction);
+                FriendsListFragmentDirections.ActionFriendsFragmentToClosetListFragment direction = FriendsListFragmentDirections.actionFriendsFragmentToClosetListFragment(friend.getUser_id());
                 Navigation.findNavController(view).navigate(direction);
             }
         });
