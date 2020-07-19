@@ -9,6 +9,18 @@
         android:name="com.example.wardrobe.GarmentsListFragment"
         android:label="fragment_closet_list"
         tools:layout="@layout/fragment_closet_list" >
+        <argument
+            android:name="owner_id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/action_closetListFragment_to_friends_garmentDetailsFragment"
+            app:destination="@id/friends_garmentDetailsFragment">
+            <argument
+                android:name="garment"
+                app:argType="com.example.wardrobe.model.entities.Garment" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/garmentDetailsFragment"
@@ -60,14 +72,22 @@
         android:name="com.example.wardrobe.FriendsListFragment"
         android:label="fragment_friends"
         tools:layout="@layout/fragment_friends_list">
-    <action
-        android:id="@+id/action_friendsListFragment_to_friendsGarmentsListFragment"
-        app:destination="@id/friendsClosetListFragment" >
+        <action
+            android:id="@+id/action_friendsListFragment_to_friendsGarmentsListFragment"
+            app:destination="@id/friendsClosetListFragment" >
+            <argument
+                android:name="owner_id"
+                app:argType="string"
+                app:nullable="true"/>
+        </action>
+        <action
+            android:id="@+id/action_friendsFragment_to_closetListFragment"
+            app:destination="@id/closetListFragment">
         <argument
             android:name="owner_id"
             app:argType="string"
             app:nullable="true"/>
-    </action>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/friendsClosetListFragment"
