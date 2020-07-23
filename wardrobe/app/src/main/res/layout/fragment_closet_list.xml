@@ -7,6 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".GarmentsListFragment">
 
+    <ProgressBar
+        android:id="@+id/closet_progressBar"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="8dp"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/img_closet_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ProgressBar>
     <!-- TODO: Update blank fragment layout -->
 
     <TextView
