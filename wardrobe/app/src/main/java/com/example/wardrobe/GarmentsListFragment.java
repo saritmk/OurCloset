@@ -143,13 +143,12 @@ public class GarmentsListFragment extends Fragment {
                 else {
                     emptyTextView.setVisibility(View.GONE);
                 }
-                progressBar.setVisibility(View.GONE);
 
                 list.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
 
                 data = garments;
                 adapter.notifyDataSetChanged();
-
             }
         });
 
