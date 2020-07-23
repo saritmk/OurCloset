@@ -1,13 +1,17 @@
 package com.example.wardrobe.model;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.wardrobe.WardrobeApplication;
 import com.example.wardrobe.model.entities.TransactionRequest;
 import com.example.wardrobe.model.firebase.TransactionRequestsFirebase;
 
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class TransactionRequestsModel {
     public interface Listener<T>{
@@ -24,14 +28,23 @@ public class TransactionRequestsModel {
     }
 
     public void refreshBorrowedFromTransactionsList(String user_id, final CompListener listener){
-        TransactionRequestsFirebase.getBorrowedFromTransactions(user_id,new Listener<List<TransactionRequest>>() {
+        long lastUpdated = WardrobeApplication.context.getSharedPreferences("TAG",MODE_PRIVATE).getLong("TransactionsLastUpdateDate",0);
+        TransactionRequestsFirebase.getBorrowedFromTransactionsSince(lastUpdated,user_id,new Listener<List<TransactionRequest>>() {
             @Override
             public void onComplete(final List<TransactionRequest> TransactionsList) {
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
-                        for (TransactionRequest currTransaction : TransactionsList) {
-                            AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                        if(TransactionsList!=null) {
+                            long lastUpdated = 0;
+                            for (TransactionRequest currTransaction : TransactionsList) {
+                                AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                                if (currTransaction.getLastUpdated() > lastUpdated)
+                                    lastUpdated = currTransaction.getLastUpdated();
+                            }
+                            SharedPreferences.Editor edit = WardrobeApplication.context.getSharedPreferences("TAG", MODE_PRIVATE).edit();
+                            edit.putLong("GarmentsLastUpdateDate", lastUpdated);
+                            edit.commit();
                         }
                         return "";
                     }
@@ -47,14 +60,23 @@ public class TransactionRequestsModel {
     }
 
     public void refreshLentToTransactionsList(String user_id, final CompListener listener){
-        TransactionRequestsFirebase.getLentToTransactions(user_id,new Listener<List<TransactionRequest>>() {
+        long lastUpdated = WardrobeApplication.context.getSharedPreferences("TAG",MODE_PRIVATE).getLong("TransactionsLastUpdateDate",0);
+        TransactionRequestsFirebase.getLentToTransactionsSince(lastUpdated, user_id,new Listener<List<TransactionRequest>>() {
             @Override
             public void onComplete(final List<TransactionRequest> TransactionsList) {
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
-                        for (TransactionRequest currTransaction : TransactionsList) {
-                            AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                        if(TransactionsList!=null) {
+                            long lastUpdated = 0;
+                            for (TransactionRequest currTransaction : TransactionsList) {
+                                AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                                if (currTransaction.getLastUpdated() > lastUpdated)
+                                    lastUpdated = currTransaction.getLastUpdated();
+                            }
+                            SharedPreferences.Editor edit = WardrobeApplication.context.getSharedPreferences("TAG", MODE_PRIVATE).edit();
+                            edit.putLong("GarmentsLastUpdateDate", lastUpdated);
+                            edit.commit();
                         }
                         return "";
                     }

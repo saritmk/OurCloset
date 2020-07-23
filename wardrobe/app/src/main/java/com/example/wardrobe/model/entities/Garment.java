@@ -17,6 +17,7 @@ public class Garment implements Serializable {
     private String owner_id;
     private String type;
     private String size;
+    private long lastUpdated;
 
     public String getSize() {
         return this.size;
@@ -65,6 +66,14 @@ public class Garment implements Serializable {
 
     public String getType() {
         return this.type;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public Garment(){}

@@ -12,7 +12,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,6 +31,26 @@ import java.util.Map;
 public class GarmentsFirebase {
     final static String GARMENTS_COLLECTION = "Garments";
 
+    public static void getGarmentListSince(long since,String owner_id, final GarmentsModel.Listener<List<Garment>> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Timestamp timestamp = new Timestamp(since,0);
+        db.collection(GARMENTS_COLLECTION).whereEqualTo("owner_id",owner_id).whereGreaterThanOrEqualTo("lastUpdated", timestamp)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<Garment> garments = null;
+                if (task.isSuccessful()){
+                    garments = new LinkedList<Garment>();
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        Map<String,Object> json = doc.getData();
+                        Garment garment = toGarment(json);
+                        garments.add(garment);
+                    }
+                }
+                listener.onComplete(garments);
+            }
+        });
+    }
     public static  void getGarmentsList(String owner_id, final GarmentsModel.Listener<List<Garment>> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(GARMENTS_COLLECTION).whereEqualTo("owner_id", owner_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -38,7 +60,7 @@ public class GarmentsFirebase {
                 if (task.isSuccessful()){
                     garmentsData = new LinkedList<Garment>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
-                        Garment garment = doc.toObject(Garment.class);
+                        Garment garment =toGarment(doc.getData());
                         if(garment.getId()!=null) {
                             garmentsData.add(garment);
                         }
@@ -84,7 +106,7 @@ public class GarmentsFirebase {
     public static void updateGarment(Garment garment, final GarmentsModel.Listener<Boolean> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(GARMENTS_COLLECTION).document(garment.getId())
-                .set(garment)
+                .set(toJson(garment))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -141,7 +163,18 @@ public class GarmentsFirebase {
             }
         });
     }
-
+    private static Garment toGarment(Map<String, Object> json){
+        Garment garment = new Garment();
+        garment.setId((String)json.get("id"));
+        garment.setOwner_id( (String)json.get("owner_id"));
+        garment.setImageUrl( (String)json.get("imageUrl"));
+        garment.setType((String)json.get("type"));
+        garment.setSize((String)json.get("size"));
+        garment.setColor((String)json.get("color"));
+        Timestamp timestamp = (Timestamp)json.get("lastUpdated");
+        if (timestamp != null) garment.setLastUpdated(timestamp.getSeconds());
+        return garment;
+    }
     private static Map<String, Object> toJson(Garment garment){
         HashMap<String, Object> result = new HashMap<>();
         result.put("size", garment.getSize());
@@ -150,6 +183,9 @@ public class GarmentsFirebase {
         result.put("color", garment.getColor());
         result.put("owner_id", garment.getOwner_id());
         result.put("type", garment.getType());
+        result.put("lastUpdated", FieldValue.serverTimestamp());
         return result;
     }
+
+
 }

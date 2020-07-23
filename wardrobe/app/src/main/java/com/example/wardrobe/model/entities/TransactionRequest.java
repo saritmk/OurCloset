@@ -25,6 +25,8 @@ public class TransactionRequest {
     @NonNull
     private String imgUrl;
 
+    private long lastUpdated;
+
     public TransactionRequest(){}
 
     public TransactionRequest(String transaction_id, String borrow_user_id,String borrow_user_name, String lend_user_id, String lend_user_name,String garment_id, String imgUrl, String status, String request_text){
@@ -78,5 +80,13 @@ public class TransactionRequest {
 
     public void setLend_user_name(@NonNull String lend_user_name) {
         this.lend_user_name = lend_user_name;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
     }
 }
