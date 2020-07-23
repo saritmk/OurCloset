@@ -90,9 +90,12 @@ public class GarmentsFirebase {
     }
 
     public static void deleteGarment(String garmentId, final GarmentsModel.Listener<Boolean> listener) {
+        HashMap<String, Object> deleteObj = new HashMap<>();
+        deleteObj.put("isDeleted", true);
+        deleteObj.put("lastUpdated", FieldValue.serverTimestamp());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(GARMENTS_COLLECTION).document(garmentId)
-                .delete()
+                .update(deleteObj)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -171,6 +174,7 @@ public class GarmentsFirebase {
         garment.setType((String)json.get("type"));
         garment.setSize((String)json.get("size"));
         garment.setColor((String)json.get("color"));
+        garment.setDeleted((boolean)json.get("isDeleted"));
         Timestamp timestamp = (Timestamp)json.get("lastUpdated");
         if (timestamp != null) garment.setLastUpdated(timestamp.getSeconds());
         return garment;
@@ -184,6 +188,7 @@ public class GarmentsFirebase {
         result.put("owner_id", garment.getOwner_id());
         result.put("type", garment.getType());
         result.put("lastUpdated", FieldValue.serverTimestamp());
+        result.put("isDeleted", garment.getDeleted());
         return result;
     }
 

@@ -18,6 +18,7 @@ public class Garment implements Serializable {
     private String type;
     private String size;
     private long lastUpdated;
+    private boolean isDeleted;
 
     public String getSize() {
         return this.size;
@@ -74,6 +75,14 @@ public class Garment implements Serializable {
 
     public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean getDeleted() {
+        return this.isDeleted;
     }
 
     public Garment(){}

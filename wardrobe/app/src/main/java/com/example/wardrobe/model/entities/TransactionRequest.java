@@ -27,6 +27,9 @@ public class TransactionRequest {
 
     private long lastUpdated;
 
+    private boolean isDeleted;
+
+
     public TransactionRequest(){}
 
     public TransactionRequest(String transaction_id, String borrow_user_id,String borrow_user_name, String lend_user_id, String lend_user_name,String garment_id, String imgUrl, String status, String request_text){
@@ -88,5 +91,13 @@ public class TransactionRequest {
 
     public long getLastUpdated() {
         return lastUpdated;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean getDeleted() {
+        return this.isDeleted;
     }
 }

@@ -130,9 +130,12 @@ public class TransactionRequestsFirebase {
     }
 
     public static void updateTransactionStatus(String transactionId, String newStatus, final TransactionRequestsModel.Listener<Boolean> listener){
+        HashMap<String, Object> updateObj = new HashMap<>();
+        updateObj.put("status", newStatus);
+        updateObj.put("lastUpdated", FieldValue.serverTimestamp());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(TRANSACTION_REQUESTS_COLLECTION).document(transactionId)
-                .update("status", newStatus)
+                .update(updateObj)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -152,7 +155,10 @@ public class TransactionRequestsFirebase {
                 querySnapshot.forEach(new Consumer<QueryDocumentSnapshot>() {
                     @Override
                     public void accept(QueryDocumentSnapshot doc) {
-                        doc.getReference().update("imgUrl",img_url);
+                        HashMap<String, Object> updateObj = new HashMap<>();
+                        updateObj.put("imgUrl", img_url);
+                        updateObj.put("lastUpdated", FieldValue.serverTimestamp());
+                        doc.getReference().update(updateObj);
                     }
                 });
             }
@@ -165,9 +171,12 @@ public class TransactionRequestsFirebase {
     }
 
     public static void deleteTransaction(String transactionId, final TransactionRequestsModel.Listener<Boolean> listener){
+        HashMap<String, Object> deleteObj = new HashMap<>();
+        deleteObj.put("isDeleted", true);
+        deleteObj.put("lastUpdated", FieldValue.serverTimestamp());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(TRANSACTION_REQUESTS_COLLECTION).document(transactionId)
-                .delete()
+                .update(deleteObj)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -186,7 +195,10 @@ public class TransactionRequestsFirebase {
                 querySnapshot.forEach(new Consumer<QueryDocumentSnapshot>() {
                     @Override
                     public void accept(QueryDocumentSnapshot doc) {
-                        doc.getReference().delete();
+                        HashMap<String, Object> deleteObj = new HashMap<>();
+                        deleteObj.put("isDeleted", true);
+                        deleteObj.put("lastUpdated", FieldValue.serverTimestamp());
+                        doc.getReference().update(deleteObj);
                     }
                 });
             }
@@ -209,6 +221,7 @@ public class TransactionRequestsFirebase {
         transactionRequest.setBorrow_user_name( (String)json.get("borrow_user_name"));
         transactionRequest.setBorrow_user_id((String)json.get("borrow_user_id"));
         transactionRequest.setGarment_id((String)json.get("garment_id"));
+        transactionRequest.setDeleted((boolean)json.get("isDeleted"));
         Timestamp timestamp = (Timestamp)json.get("lastUpdated");
         if (timestamp != null) transactionRequest.setLastUpdated(timestamp.getSeconds());
         return transactionRequest;
@@ -226,6 +239,7 @@ public class TransactionRequestsFirebase {
         result.put("imgUrl",transaction.getImgUrl());
         result.put("garment_id",transaction.getGarment_id());
         result.put("lastUpdated", FieldValue.serverTimestamp());
+        result.put("isDeleted", transaction.getDeleted());
         return result;
     }
 

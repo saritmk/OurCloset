@@ -38,7 +38,12 @@ public class TransactionRequestsModel {
                         if(TransactionsList!=null) {
                             long lastUpdated = 0;
                             for (TransactionRequest currTransaction : TransactionsList) {
-                                AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                                if(currTransaction.getDeleted()){
+                                    AppLocalDb.db.transactionDao().delete(currTransaction);
+                                }
+                                else {
+                                    AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                                }
                                 if (currTransaction.getLastUpdated() > lastUpdated)
                                     lastUpdated = currTransaction.getLastUpdated();
                             }
@@ -70,7 +75,12 @@ public class TransactionRequestsModel {
                         if(TransactionsList!=null) {
                             long lastUpdated = 0;
                             for (TransactionRequest currTransaction : TransactionsList) {
-                                AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                                if(currTransaction.getDeleted()){
+                                    AppLocalDb.db.transactionDao().delete(currTransaction);
+                                }
+                                else {
+                                    AppLocalDb.db.transactionDao().insertAll(currTransaction);
+                                }
                                 if (currTransaction.getLastUpdated() > lastUpdated)
                                     lastUpdated = currTransaction.getLastUpdated();
                             }

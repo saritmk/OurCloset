@@ -45,7 +45,12 @@ public class GarmentsModel {
                         if(garmentsList!=null) {
                             long lastUpdated = 0;
                             for (Garment currGarment : garmentsList) {
-                                AppLocalDb.db.garmentDao().insertAll(currGarment);
+                                if(currGarment.getDeleted()){
+                                    AppLocalDb.db.garmentDao().delete(currGarment);
+                                }
+                                else {
+                                    AppLocalDb.db.garmentDao().insertAll(currGarment);
+                                }
                                 if (currGarment.getLastUpdated() > lastUpdated)
                                     lastUpdated = currGarment.getLastUpdated();
                             }
