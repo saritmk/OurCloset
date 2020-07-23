@@ -166,6 +166,10 @@ public class TransactionListFragment extends Fragment {
                         EmptyLentTextView.setVisibility(View.GONE);
 
                     }
+                    else{
+                        EmptyBorrwedTextView.setVisibility(View.GONE);
+                        EmptyLentTextView.setVisibility(View.GONE);
+                    }
                     data = transactionRequests;
                     adapter.notifyDataSetChanged();
                 }
@@ -181,6 +185,10 @@ public class TransactionListFragment extends Fragment {
                     if(transactionRequests.isEmpty()) {
                         EmptyBorrwedTextView.setVisibility(View.GONE);
                         EmptyLentTextView.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        EmptyBorrwedTextView.setVisibility(View.GONE);
+                        EmptyLentTextView.setVisibility(View.GONE);
                     }
                     data = transactionRequests;
                     adapter.notifyDataSetChanged();
