@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ public class GarmentsListFragment extends Fragment {
     TextView emptyTextView;
     TextView OwnerTextView;
     ImageView OwnerPicture;
+    ProgressBar progressBar;
     User Owner;
 
     interface Delegate{
@@ -94,6 +96,7 @@ public class GarmentsListFragment extends Fragment {
         emptyTextView.setVisibility(View.GONE);
         OwnerTextView = view.findViewById(R.id.closet_user_name);
         OwnerPicture = view.findViewById(R.id.img_closet_list);
+        progressBar = view.findViewById(R.id.closet_progressBar);
         GridLayoutManager  layoutManager = new GridLayoutManager(getContext(),3);
         list.setLayoutManager(layoutManager);
         BottomNavigationView bottomNav = getActivity().findViewById(R.id.home_bottomNavigationView);
@@ -129,7 +132,8 @@ public class GarmentsListFragment extends Fragment {
                 return user;
             }
         });
-
+        list.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Garment>>() {
             @Override
             public void onChanged(List<Garment> garments) {
@@ -139,8 +143,13 @@ public class GarmentsListFragment extends Fragment {
                 else {
                     emptyTextView.setVisibility(View.GONE);
                 }
+                progressBar.setVisibility(View.GONE);
+
+                list.setVisibility(View.VISIBLE);
+
                 data = garments;
                 adapter.notifyDataSetChanged();
+
             }
         });
 
