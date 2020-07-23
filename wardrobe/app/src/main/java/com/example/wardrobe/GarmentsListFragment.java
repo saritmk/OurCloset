@@ -101,6 +101,7 @@ public class GarmentsListFragment extends Fragment {
         list.setLayoutManager(layoutManager);
         BottomNavigationView bottomNav = getActivity().findViewById(R.id.home_bottomNavigationView);
         bottomNav.setVisibility(View.VISIBLE);
+        emptyTextView.setVisibility(View.GONE);
 
         adapter = new GarmentListAdapter();
         list.setAdapter(adapter);
@@ -143,7 +144,6 @@ public class GarmentsListFragment extends Fragment {
                 else {
                     emptyTextView.setVisibility(View.GONE);
                 }
-
                 list.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
 

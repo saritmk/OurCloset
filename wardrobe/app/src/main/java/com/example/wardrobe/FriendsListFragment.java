@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class FriendsListFragment extends Fragment {
     UsersViewModel viewModel;
     LiveData<List<User>> liveData;
     String currentUserId="";
+    ProgressBar progressBar;
 
     interface Delegate{
         void onItemSelected(User friend);
@@ -62,6 +64,7 @@ public class FriendsListFragment extends Fragment {
         final View view =  inflater.inflate(R.layout.fragment_friends_list, container, false);
         list = view.findViewById(R.id.friends_list_list);
         list.setHasFixedSize(true);
+        progressBar = view.findViewById(R.id.closet_progressBar);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),1);
         list.setLayoutManager(layoutManager);
@@ -80,20 +83,22 @@ public class FriendsListFragment extends Fragment {
             public void onClick(int position) {
                 Log.d("TAG","row was clicked" + position);
                 User friend = data.get(position);
-                //FriendsListFragmentDirections.ActionFriendsListFragmentToFriendsGarmentsListFragment direction = FriendsListFragmentDirections.actionFriendsListFragmentToFriendsGarmentsListFragment(friend.getUser_id());
-                //Navigation.findNavController(view).navigate(direction);
                 FriendsListFragmentDirections.ActionFriendsFragmentToClosetListFragment direction = FriendsListFragmentDirections.actionFriendsFragmentToClosetListFragment(friend.getUser_id());
                 Navigation.findNavController(view).navigate(direction);
             }
         });
-
+        progressBar.setVisibility(View.VISIBLE);
         liveData = viewModel.getData();
+        list.setVisibility(View.GONE);
+
         liveData.observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
-                List<User> friends = removeOwnUserFromFriendsList(users);
-                data = friends;
-                adapter.notifyDataSetChanged();
+            List<User> friends = removeOwnUserFromFriendsList(users);
+            data = friends;
+            adapter.notifyDataSetChanged();
+            list.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
             }
         });
 
