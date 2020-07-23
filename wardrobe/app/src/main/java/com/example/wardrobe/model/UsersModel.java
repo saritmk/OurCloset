@@ -1,13 +1,17 @@
 package com.example.wardrobe.model;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.wardrobe.WardrobeApplication;
 import com.example.wardrobe.model.entities.User;
 import com.example.wardrobe.model.firebase.UsersFirebase;
 
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class UsersModel {
     public interface Listener<T>{
@@ -22,15 +26,23 @@ public class UsersModel {
     }
 
     public void refreshUsersList(final CompListener listener){
-        UsersFirebase.getAllUsersList(new Listener<List<User>>() {
+        long lastUpdated = WardrobeApplication.context.getSharedPreferences("TAG",MODE_PRIVATE).getLong("UsersLastUpdateDate",0);
+        UsersFirebase.getAllUsersListSince(lastUpdated,new Listener<List<User>>() {
             @Override
             public User onComplete(final List<User> usersList) {
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
+                        long lastUpdated = 0;
                         for (User currUser : usersList) {
                             AppLocalDb.db.usersDao().insertAll(currUser);
+                            if (currUser.getLastUpdated() > lastUpdated)
+                                lastUpdated = currUser.getLastUpdated();
                         }
+                        SharedPreferences.Editor edit = WardrobeApplication.context.getSharedPreferences("TAG", MODE_PRIVATE).edit();
+                        edit.putLong("UsersLastUpdateDate", lastUpdated);
+                        edit.commit();
+
                         return "";
                     }
                     @Override

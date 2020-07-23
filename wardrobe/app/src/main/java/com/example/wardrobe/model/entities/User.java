@@ -15,6 +15,7 @@ public class User {
     private String name;
     private String img_url;
     private String email;
+    private long lastUpdated;
 
     public User(){}
 
@@ -62,5 +63,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
     }
 }

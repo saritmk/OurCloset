@@ -2,13 +2,16 @@ package com.example.wardrobe.model.firebase;
 
 import androidx.annotation.NonNull;
 
+
 import com.example.wardrobe.model.UsersModel;
 import com.example.wardrobe.model.entities.Garment;
 import com.example.wardrobe.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -21,6 +24,26 @@ import java.util.Map;
 public class UsersFirebase {
     final static String USERS_COLLECTION = "users";
 
+    public static void getAllUsersListSince(long since, final UsersModel.Listener<List<User>> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Timestamp timestamp = new Timestamp(since,0);
+        db.collection(USERS_COLLECTION).whereGreaterThanOrEqualTo("lastUpdated", timestamp)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<User> usersData = null;
+                if (task.isSuccessful()){
+                    usersData = new LinkedList<User>();
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        Map<String,Object> json = doc.getData();
+                        User user = toUser(json);
+                        usersData.add(user);
+                    }
+                }
+                listener.onComplete(usersData);
+            }
+        });
+    }
     public static void getAllUsersList(final UsersModel.Listener<List<User>> listener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(USERS_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -48,7 +71,7 @@ public class UsersFirebase {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()){
-                        listener.onComplete(document.toObject(User.class));
+                        listener.onComplete(toUser(document.getData()));
                     }
                 }
             }
@@ -73,7 +96,19 @@ public class UsersFirebase {
         result.put("email",user.getEmail());
         result.put("name",user.getName());
         result.put("img_url",user.getImg_url());
+        result.put("lastUpdated", FieldValue.serverTimestamp());
         return result;
+    }
+
+    private static User toUser(Map<String, Object> json){
+        User user = new User();
+        user.setUser_id((String)json.get("user_id"));
+        user.setEmail( (String)json.get("email"));
+        user.setImg_url( (String)json.get("img_url"));
+        user.setName((String)json.get("name"));
+        Timestamp timestamp = (Timestamp)json.get("lastUpdated");
+        if (timestamp != null) user.setLastUpdated(timestamp.getSeconds());
+        return user;
     }
 }
 

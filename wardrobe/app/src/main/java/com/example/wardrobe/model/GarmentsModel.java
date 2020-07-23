@@ -1,5 +1,8 @@
 package com.example.wardrobe.model;
 
+import com.example.wardrobe.WardrobeApplication;
+
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
@@ -11,10 +14,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class GarmentsModel {
     public interface Listener<T>{
@@ -29,14 +35,23 @@ public class GarmentsModel {
     }
 
     public void refreshGarmentsList(String owner_id, final CompListener listener){
-        GarmentsFirebase.getGarmentsList(owner_id,new Listener<List<Garment>>() {
+        long lastUpdated = WardrobeApplication.context.getSharedPreferences("TAG",MODE_PRIVATE).getLong("GarmentsLastUpdateDate",0);
+        GarmentsFirebase.getGarmentListSince(lastUpdated, owner_id,new Listener<List<Garment>>() {
             @Override
             public void onComplete(final List<Garment> garmentsList) {
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
-                        for (Garment currGarment : garmentsList) {
-                            AppLocalDb.db.garmentDao().insertAll(currGarment);
+                        if(garmentsList!=null) {
+                            long lastUpdated = 0;
+                            for (Garment currGarment : garmentsList) {
+                                AppLocalDb.db.garmentDao().insertAll(currGarment);
+                                if (currGarment.getLastUpdated() > lastUpdated)
+                                    lastUpdated = currGarment.getLastUpdated();
+                            }
+                            SharedPreferences.Editor edit = WardrobeApplication.context.getSharedPreferences("TAG", MODE_PRIVATE).edit();
+                            edit.putLong("GarmentsLastUpdateDate", lastUpdated);
+                            edit.commit();
                         }
                         return "";
                     }

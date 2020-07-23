@@ -115,7 +115,7 @@ public class TransactionListFragment extends Fragment {
             @Override
             public void onRejectClick(int position) {
                 TransactionRequest transactionRequest = data.get(position);
-                viewModelTransactionItem.updateTransactionStatus(transactionRequest.getTransaction_id(), "rejected", new TransactionRequestsModel.Listener<Boolean>() {
+                viewModelTransactionItem.deleteTransaction(transactionRequest, new TransactionRequestsModel.Listener<Boolean>() {
                     @Override
                     public void onComplete(Boolean data) {
                         viewModel.refresh(null);
